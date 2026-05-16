@@ -1,11 +1,21 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import SearchBar from "@components/SearchBar.astro";
 
 type BlogEntry = CollectionEntry<"blog">;
 type ProjectEntry = CollectionEntry<"projects">;
 type WorkEntry = CollectionEntry<"work">;
 
 type SearchEntry = BlogEntry | ProjectEntry | WorkEntry;
+
+type SearchItem = {
+  title: string;
+  summary: string;
+  dateLabel: string;
+  tags: string[];
+  href: string;
+  searchText: string;
+};
 
 type Props = {
   data: SearchEntry[];
@@ -19,7 +29,7 @@ const {
   entry_name = "items",
 } = Astro.props as Props;
 
-const toValidDate = (value: unknown, label = "date"): Date | null => {
+const toValidDate = (value: unknown): Date | null => {
   if (value instanceof Date) {
     return Number.isNaN(value.getTime()) ? null : value;
   }
@@ -32,8 +42,8 @@ const toValidDate = (value: unknown, label = "date"): Date | null => {
   return null;
 };
 
-const formatDate = (value: unknown, label = "date") => {
-  const date = toValidDate(value, label);
+const formatDate = (value: unknown): string => {
+  const date = toValidDate(value);
 
   if (!date) {
     return "";
@@ -46,8 +56,8 @@ const formatDate = (value: unknown, label = "date") => {
   }).format(date);
 };
 
-const formatDateRange = (start: unknown, end: unknown) => {
-  const startLabel = formatDate(start, "dateStart");
+const formatDateRange = (start: unknown, end: unknown): string => {
+  const startLabel = formatDate(start);
 
   if (!end) {
     return startLabel;
@@ -65,7 +75,7 @@ const formatDateRange = (start: unknown, end: unknown) => {
     }
   }
 
-  const endLabel = formatDate(end, "dateEnd");
+  const endLabel = formatDate(end);
 
   if (!startLabel && !endLabel) {
     return "";
@@ -78,7 +88,7 @@ const formatDateRange = (start: unknown, end: unknown) => {
   return `${startLabel} - ${endLabel}`;
 };
 
-const getTitle = (entry: SearchEntry) => {
+const getTitle = (entry: SearchEntry): string => {
   if (entry.collection === "work") {
     return `${entry.data.role} · ${entry.data.company}`;
   }
@@ -86,7 +96,7 @@ const getTitle = (entry: SearchEntry) => {
   return entry.data.title;
 };
 
-const getSummary = (entry: SearchEntry) => {
+const getSummary = (entry: SearchEntry): string => {
   if (entry.collection === "work") {
     return entry.data.company;
   }
@@ -94,15 +104,15 @@ const getSummary = (entry: SearchEntry) => {
   return entry.data.summary;
 };
 
-const getDateLabel = (entry: SearchEntry) => {
+const getDateLabel = (entry: SearchEntry): string => {
   if (entry.collection === "work") {
     return formatDateRange(entry.data.dateStart, entry.data.dateEnd);
   }
 
-  return formatDate(entry.data.date, `${entry.collection}/${entry.slug}.date`);
+  return formatDate(entry.data.date);
 };
 
-const getTags = (entry: SearchEntry) => {
+const getTags = (entry: SearchEntry): string[] => {
   if (entry.collection === "work") {
     return [];
   }
@@ -110,7 +120,7 @@ const getTags = (entry: SearchEntry) => {
   return entry.data.tags ?? [];
 };
 
-const getHref = (entry: SearchEntry) => {
+const getHref = (entry: SearchEntry): string => {
   if (entry.collection === "work") {
     return "";
   }
@@ -118,7 +128,10 @@ const getHref = (entry: SearchEntry) => {
   return `/${entry.collection}/${entry.slug}`;
 };
 
-const items = data.map((entry) => {
+const label = entry_name === "posts" ? "posts" : entry_name;
+const searchId = `${label}-search`;
+
+const items: SearchItem[] = data.map((entry: SearchEntry) => {
   const title = getTitle(entry);
   const summary = getSummary(entry);
   const dateLabel = getDateLabel(entry);
@@ -126,19 +139,18 @@ const items = data.map((entry) => {
   const href = getHref(entry);
 
   const searchText = [
-    entry.slug,
     entry.collection,
+    entry.slug,
     title,
     summary,
     dateLabel,
     ...entryTags,
   ]
-    .filter(Boolean)
+    .filter((token): token is string => typeof token === "string" && token.length > 0)
     .join(" ")
     .toLowerCase();
 
   return {
-    entry,
     title,
     summary,
     dateLabel,
@@ -148,60 +160,24 @@ const items = data.map((entry) => {
   };
 });
 
-const allTags =
+const allTags: string[] =
   tags.length > 0
     ? tags
-    : [...new Set(items.flatMap((item) => item.tags))].sort((a, b) =>
-        a.localeCompare(b)
+    : [...new Set(items.flatMap((item: SearchItem) => item.tags))].sort(
+        (a: string, b: string) => a.localeCompare(b)
       );
-
-const label = entry_name === "posts" ? "posts" : entry_name;
 ---
 
 <div class="flex flex-col" data-search-root>
-<div class="relative">
-  <label for={`search-${label}`} class="sr-only">
-    Search {label}
-  </label>
-
-  <div class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8"></circle>
-      <path d="m21 21-4.3-4.3"></path>
-    </svg>
-  </div>
-
-  <input
-    id={`search-${label}`}
-    data-search-input
-    type="search"
-    placeholder="What are you looking for?"
-    class="w-full rounded-lg border border-black/15 bg-white py-3 pl-10 pr-16 text-sm text-black outline-none placeholder:text-black/40 focus:border-black/40 dark:border-white/20 dark:bg-black dark:text-white dark:placeholder:text-white/40 dark:focus:border-white/50"
+  <SearchBar
+    id={searchId}
+    label={`Search ${label}`}
+    placeholderText="What are you looking for?"
   />
-
-  <button
-    type="button"
-    data-search-clear
-    class="absolute right-3 top-1/2 hidden -translate-y-1/2 text-sm text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white"
-  >
-    Clear
-  </button>
-</div>
 
   {allTags.length > 0 && (
     <div class="mt-4 flex flex-wrap gap-2">
-      {allTags.map((tag : string) => (
+      {allTags.map((tag: string) => (
         <button
           type="button"
           data-tag-button
@@ -222,7 +198,7 @@ const label = entry_name === "posts" ? "posts" : entry_name;
 
   {items.length > 0 ? (
     <ul data-search-list class="mt-8 flex flex-col gap-3">
-      {items.map((item) => (
+      {items.map((item: SearchItem) => (
         <li
           data-search-item
           data-search-text={item.searchText}
@@ -267,10 +243,12 @@ const label = entry_name === "posts" ? "posts" : entry_name;
                 height="20"
                 viewBox="0 0 24 24"
                 fill="none"
+                stroke="currentColor"
                 stroke-width="2.5"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 class="shrink-0 stroke-current text-black/50 transition-colors group-hover:text-black dark:text-white/50 group-hover:dark:text-white"
+                aria-hidden="true"
               >
                 <line
                   x1="5"
@@ -317,12 +295,12 @@ const label = entry_name === "posts" ? "posts" : entry_name;
 <script>
   const roots = document.querySelectorAll("[data-search-root]");
 
-  roots.forEach((root) => {
-    if (root instanceof HTMLElement && root.dataset.searchReady === "true") {
+  roots.forEach((root: Element) => {
+    if (!(root instanceof HTMLElement)) {
       return;
     }
 
-    if (!(root instanceof HTMLElement)) {
+    if (root.dataset.searchReady === "true") {
       return;
     }
 
@@ -340,13 +318,16 @@ const label = entry_name === "posts" ? "posts" : entry_name;
 
     let activeTag = "";
 
-      const normalize = (value: string): string => value.trim().toLowerCase();    
+    const normalize = (value: string): string => value.trim().toLowerCase();
 
-    const render = () => {
+    const render = (): void => {
       const query = normalize(input.value);
+      const tokens = query
+        .split(/\s+/)
+        .filter((token: string) => token.length > 0);
       let visibleCount = 0;
 
-      items.forEach((item) => {
+      items.forEach((item: Element) => {
         if (!(item instanceof HTMLElement)) {
           return;
         }
@@ -354,7 +335,9 @@ const label = entry_name === "posts" ? "posts" : entry_name;
         const searchText = item.dataset.searchText ?? "";
         const itemTags = item.dataset.searchTags ?? "";
 
-        const matchesQuery = query.length < 2 || searchText.includes(query);
+        const matchesQuery =
+          query.length < 2 ||
+          tokens.every((token: string) => searchText.includes(token));
         const matchesTag = !activeTag || itemTags.includes(activeTag);
         const isVisible = matchesQuery && matchesTag;
 
@@ -369,14 +352,14 @@ const label = entry_name === "posts" ? "posts" : entry_name;
         clearButton.classList.toggle("hidden", input.value.length === 0);
       }
 
-      tagButtons.forEach((button) => {
+      tagButtons.forEach((button: Element) => {
         if (!(button instanceof HTMLElement)) {
           return;
         }
 
         const isActive = button.dataset.tagValue === activeTag;
-        button.setAttribute("aria-pressed", String(isActive));
 
+        button.setAttribute("aria-pressed", String(isActive));
         button.classList.toggle("border-black/60", isActive);
         button.classList.toggle("text-black", isActive);
         button.classList.toggle("dark:border-white/70", isActive);
@@ -391,7 +374,10 @@ const label = entry_name === "posts" ? "posts" : entry_name;
         if (shouldShowMeta) {
           const queryPart = query.length >= 2 ? ` for '${input.value}'` : "";
           const tagPart = activeTag ? ` in '${activeTag}'` : "";
-          meta.textContent = `Showing ${visibleCount} result${visibleCount === 1 ? "" : "s"}${queryPart}${tagPart}`;
+
+          meta.textContent = `Showing ${visibleCount} result${
+            visibleCount === 1 ? "" : "s"
+          }${queryPart}${tagPart}`;
         }
       }
     };
@@ -406,7 +392,7 @@ const label = entry_name === "posts" ? "posts" : entry_name;
       });
     }
 
-    tagButtons.forEach((button) => {
+    tagButtons.forEach((button: Element) => {
       if (!(button instanceof HTMLElement)) {
         return;
       }
