@@ -1,11 +1,292 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import PageLayout from "../layouts/PageLayout.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import StackCard from "@components/StackCard.astro";
+import { SITE, SOCIALS } from "@/consts";
+
+type BlogEntry = CollectionEntry<"blog">;
+type ProjectEntry = CollectionEntry<"projects">;
+
+const dateToTime = (value: unknown, label: string): number => {
+  if (value instanceof Date) {
+    const time = value.getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: received Invalid Date`);
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const time = new Date(value).getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: ${String(value)}`);
+  }
+
+  throw new Error(
+    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
+  );
+};
+
+const posts = ((await getCollection("blog")) as BlogEntry[])
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
+      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
+  )
+  .slice(0, 3);
+
+const projects = ((await getCollection("projects")) as ProjectEntry[])
+  .filter((project) => !project.data.draft)
+  .sort(
+    (a, b) =>
+      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
+      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
+  )
+  .slice(0, 3);
+
+const stack = [
+  {
+    text: "Astro",
+    icon: "astro",
+    href: "https://astro.build",
+  },
+  {
+    text: "JavaScript",
+    icon: "javascript",
+    href: "https://www.javascript.com",
+  },
+  {
+    text: "TypeScript",
+    icon: "typescript",
+    href: "https://www.typescriptlang.org",
+  },
+  {
+    text: "Tailwind",
+    icon: "tailwind",
+    href: "https://tailwindcss.com",
+  },
+];
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<PageLayout title="Home" description={SITE.DESCRIPTION}>
+  <main class="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
+    <!-- Static Background -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.20),_transparent_35%),linear-gradient(to_bottom,_#ffffff,_#f5f5f5)] dark:bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.25),_transparent_35%),linear-gradient(to_bottom,_#020617,_#000000)]"
+    >
+    </div>
+
+    <!-- HERO -->
+    <section class="relative flex min-h-screen w-full items-center justify-center px-5">
+      <div class="absolute inset-0 top-1/4 overflow-hidden">
+        <div
+          class="absolute left-1/2 top-0 aspect-square min-h-[100vh] w-[250vw] -translate-x-1/2 rounded-full bg-gradient-to-b from-black/10 from-0% to-transparent to-5% p-[1px] dark:from-white/20"
+        >
+          <div class="flex h-full w-full justify-center overflow-hidden rounded-full bg-white p-[1px] dark:bg-black">
+            <div class="h-20 w-full rounded-full bg-neutral-900/10 blur-3xl dark:bg-white/25"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative flex h-full w-full items-center justify-center">
+        <div class="p-5 text-center">
+          <p class="text-lg font-semibold opacity-75 md:text-xl lg:text-2xl">
+            Hello, I am ...
+          </p>
+
+          <h1 class="mt-2 text-2xl font-bold text-black dark:text-white md:text-3xl lg:text-4xl">
+            Shravani
+          </h1>
+
+          <p class="mt-2 text-sm opacity-75 md:text-base lg:text-lg">
+            Currently designing products for humans.
+          </p>
+
+          <div class="mt-5 flex flex-wrap justify-center gap-4">
+            <a
+              href="/blog"
+              class="rounded bg-black px-4 py-2 text-xs text-white hover:opacity-75 dark:bg-white dark:text-black md:text-sm lg:text-base"
+            >
+              Read my blog
+            </a>
+
+            <a
+              href="/projects"
+              class="rounded border border-black/25 px-4 py-2 text-xs hover:bg-black/5 dark:border-white/25 hover:dark:bg-white/15 md:text-sm lg:text-base"
+            >
+              View my work
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="relative bg-white dark:bg-black">
+      <div class="mx-auto max-w-screen-sm space-y-24 p-5 pb-16">
+        <!-- About Section -->
+        <section>
+          <article class="space-y-4">
+            <p>
+              I am a <b><i>software engineer</i></b>,
+              <b><i>UI/UX designer</i></b>,
+              <b><i>product planner</i></b>,
+              <b><i>mentor</i></b>,
+              <b><i>student</i></b>,
+              <b><i>minimalist</i></b>,
+              <b><i>eternal optimist</i></b>,
+              <b><i>crypto enthusiast</i></b>, and
+              <b><i>sarcasm connoisseur</i></b>.
+            </p>
+
+            <p>
+              I love to both build and break things. I am motivated by challenging
+              projects with self-guided research and dynamic problem solving.
+              My true passion is crafting creative front-end designs with unique
+              takes on color, typography, and motion.
+            </p>
+
+            <p>
+              During my career, I have built products ranging from marketing and
+              ecommerce websites to complex enterprise apps, with a focus on
+              delivering fast, elegant code along with thoughtful user interfaces.
+            </p>
+
+            <p>
+              I currently work as a software engineer at StreamlineFS, where I do
+              product planning, design, and development.
+            </p>
+          </article>
+        </section>
+
+        <!-- Blog Preview Section -->
+        <section>
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <p class="font-semibold text-black dark:text-white">
+                Recent posts
+              </p>
+
+              <a
+                href="/blog"
+                class="group flex w-fit items-center gap-1 underline decoration-black/25 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
+              >
+                <span class="text-black/75 group-hover:text-black dark:text-white/75 group-hover:dark:text-white">
+                  All posts
+                </span>
+              </a>
+            </div>
+
+            <ul class="space-y-4">
+              {posts.map((post) => (
+                <li>
+                  <ArrowCard entry={post} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section>
+          <div class="space-y-4">
+            <p class="font-semibold text-black dark:text-white">
+              Website built with
+            </p>
+
+            <div class="mt-5 flex flex-wrap items-center gap-2">
+              {stack.map((item) => (
+                <StackCard
+                  text={item.text}
+                  icon={item.icon}
+                  href={item.href}
+                />
+              ))}
+            </div>
+
+            <p>
+              Built as a fast, content-focused Astro site with TypeScript and
+              Tailwind.
+            </p>
+          </div>
+        </section>
+
+        <!-- Project Preview Section -->
+        <section>
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <p class="font-semibold text-black dark:text-white">
+                Recent projects
+              </p>
+
+              <a
+                href="/projects"
+                class="group flex w-fit items-center gap-1 underline decoration-black/25 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
+              >
+                <span class="text-black/75 group-hover:text-black dark:text-white/75 group-hover:dark:text-white">
+                  All projects
+                </span>
+              </a>
+            </div>
+
+            <ul class="space-y-4">
+              {projects.map((project) => (
+                <li>
+                  <ArrowCard entry={project} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section>
+          <div>
+            <p class="font-semibold text-black dark:text-white">
+              Let's Connect
+            </p>
+
+            <p>
+              Reach out to me via email or on social media.
+            </p>
+
+            <div class="mt-4 grid grid-cols-4 gap-y-2 auto-cols-min">
+              {SOCIALS.map((social) => (
+                <div class="contents">
+                  <div class="col-span-1 flex items-center gap-1">
+                    <span class="truncate whitespace-nowrap">
+                      {social.NAME}
+                    </span>
+                  </div>
+
+                  <div class="col-span-3 truncate">
+                    <a
+                      href={social.HREF}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="group col-span-3 flex w-fit items-center gap-1 underline decoration-black/25 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
+                    >
+                      <span class="text-black/75 group-hover:text-black dark:text-white/75 group-hover:dark:text-white">
+                        {social.TEXT}
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</PageLayout>

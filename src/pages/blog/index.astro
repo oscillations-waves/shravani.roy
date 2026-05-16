@@ -1,0 +1,78 @@
+---
+import { getCollection } from "astro:content";
+
+import PageLayout from "../../layouts/PageLayout.astro";
+import TopLayout from "../../layouts/TopLayout.astro";
+import BottomLayout from "../../layouts/BottomLayout.astro";
+import SearchCollection from "@components/SearchCollection.astro";
+import { BLOG } from "@/consts";
+
+const dateToTime = (value: unknown, label: string): number => {
+  if (value instanceof Date) {
+    const time = value.getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: received Invalid Date`);
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const time = new Date(value).getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: ${String(value)}`);
+  }
+
+  throw new Error(
+    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
+  );
+};
+
+const posts = (await getCollection("blog"))
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
+      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
+  );
+
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort(
+  (a, b) => a.localeCompare(b)
+);
+
+const estimated_initial_size =
+  28 + posts.length * 158 + Math.max(posts.length - 1, 0) * 12;
+---
+
+<PageLayout title={BLOG.TITLE} description={BLOG.DESCRIPTION}>
+  <TopLayout>
+    <div>
+      <h1 class="mt-2 text-3xl font-semibold text-black dark:text-white">
+        {BLOG.TITLE}
+      </h1>
+
+      <div class="mt-1">
+        {BLOG.DESCRIPTION}
+      </div>
+    </div>
+  </TopLayout>
+
+  <BottomLayout>
+    <div
+      id="search-collection-wrapper"
+      class="animate"
+      style={`min-height: ${estimated_initial_size}px`}
+    >
+      <SearchCollection
+        entry_name="posts"
+        tags={tags}
+        data={posts}
+      />
+    </div>
+  </BottomLayout>
+</PageLayout>

@@ -1,0 +1,57 @@
+---
+type Props = {
+  id?: string;
+  label?: string;
+  placeholderText?: string;
+};
+
+const {
+  id = "search",
+  label = "Search",
+  placeholderText = "What are you looking for?",
+} = Astro.props as Props;
+---
+
+<div class="relative">
+  <label for={id} class="sr-only">
+    {label}
+  </label>
+
+  <div class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.3-4.3"></path>
+    </svg>
+  </div>
+
+  <input
+    id={id}
+    data-search-input
+    name="search"
+    type="search"
+    autocomplete="off"
+    spellcheck="false"
+    placeholder={placeholderText}
+    class="w-full rounded-lg border border-black/15 bg-white py-3 pl-10 pr-16 text-sm text-black outline-none placeholder:text-black/40 focus:border-black/40 dark:border-white/20 dark:bg-black dark:text-white dark:placeholder:text-white/40 dark:focus:border-white/50"
+  />
+
+  <button
+    type="button"
+    data-search-clear
+    class="absolute right-3 top-1/2 hidden -translate-y-1/2 text-sm text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white"
+    aria-label="Clear search"
+  >
+    Clear
+  </button>
+</div>

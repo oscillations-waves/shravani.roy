@@ -1,0 +1,75 @@
+---
+import { getCollection } from "astro:content";
+
+import PageLayout from "../../layouts/PageLayout.astro";
+import TopLayout from "../../layouts/TopLayout.astro";
+import BottomLayout from "../../layouts/BottomLayout.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import { PROJECTS } from "@/consts";
+
+const dateToTime = (value: unknown, label: string): number => {
+  if (value instanceof Date) {
+    const time = value.getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: received Invalid Date`);
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const time = new Date(value).getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: ${String(value)}`);
+  }
+
+  throw new Error(
+    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
+  );
+};
+
+const projects = (await getCollection("projects"))
+  .filter((project) => !project.data.draft)
+  .sort(
+    (a, b) =>
+      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
+      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
+  );
+---
+
+<PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
+  <TopLayout>
+    <div>
+      <h1 class="mt-2 text-3xl font-semibold text-black dark:text-white">
+        {PROJECTS.TITLE}
+      </h1>
+
+      <div class="mt-1">
+        {PROJECTS.DESCRIPTION}
+      </div>
+    </div>
+  </TopLayout>
+
+  <BottomLayout>
+    <section class="space-y-4">
+      {projects.length > 0 ? (
+        <ul class="space-y-4">
+          {projects.map((project) => (
+            <li>
+              <ArrowCard entry={project} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-black/70 dark:text-white/70">
+          No projects found.
+        </p>
+      )}
+    </section>
+  </BottomLayout>
+</PageLayout>

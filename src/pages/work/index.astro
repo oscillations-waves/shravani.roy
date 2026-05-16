@@ -1,0 +1,123 @@
+---
+import { getCollection } from "astro:content";
+
+import PageLayout from "../../layouts/PageLayout.astro";
+import TopLayout from "../../layouts/TopLayout.astro";
+import BottomLayout from "../../layouts/BottomLayout.astro";
+import { WORK } from "@/consts";
+
+const dateToTime = (value: unknown, label: string): number => {
+  if (value instanceof Date) {
+    const time = value.getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: received Invalid Date`);
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const time = new Date(value).getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+
+    throw new Error(`Invalid date for ${label}: ${String(value)}`);
+  }
+
+  throw new Error(
+    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
+  );
+};
+
+const formatWorkDate = (value: unknown): string => {
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+
+    if (
+      normalized === "present" ||
+      normalized === "current" ||
+      normalized === "now"
+    ) {
+      return "Present";
+    }
+
+    const parsed = new Date(value);
+
+    if (Number.isNaN(parsed.getTime())) {
+      return value;
+    }
+
+    return parsed.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  return "";
+};
+
+const collection = (await getCollection("work")).sort(
+  (a, b) =>
+    dateToTime(b.data.dateStart, `${b.collection}/${b.slug}.dateStart`) -
+    dateToTime(a.data.dateStart, `${a.collection}/${a.slug}.dateStart`)
+);
+
+const work = await Promise.all(
+  collection.map(async (item) => {
+    const { Content } = await item.render();
+
+    return {
+      ...item,
+      Content,
+    };
+  })
+);
+---
+
+<PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
+  <TopLayout>
+    <div class="page-heading">
+      {WORK.TITLE}
+    </div>
+  </TopLayout>
+
+  <BottomLayout>
+    {work.length > 0 ? (
+      <ul>
+        {work.map(({ data, Content }) => (
+          <li class="mt-4 border-b border-black/10 py-8 first-of-type:mt-0 first-of-type:pt-0 last-of-type:border-none dark:border-white/25">
+            <div class="mb-4 text-sm uppercase text-black/60 dark:text-white/60">
+              {formatWorkDate(data.dateStart)} - {formatWorkDate(data.dateEnd)}
+            </div>
+
+            <div class="font-semibold text-black dark:text-white">
+              {data.company}
+            </div>
+
+            <div class="text-sm font-semibold text-black/70 dark:text-white/70">
+              {data.role}
+            </div>
+
+            <article class="prose mt-4 dark:prose-invert">
+              <Content />
+            </article>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-black/70 dark:text-white/70">
+        No work entries found.
+      </p>
+    )}
+  </BottomLayout>
+</PageLayout>
