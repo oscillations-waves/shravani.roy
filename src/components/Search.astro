@@ -3,31 +3,34 @@ import type { CollectionEntry } from "astro:content";
 import ArrowCard from "@components/ArrowCard.astro";
 import SearchBar from "@components/SearchBar.astro";
 
+type SearchEntry = CollectionEntry<"blog"> | CollectionEntry<"projects">;
+
 type Props = {
-  data: CollectionEntry<"blog">[];
+  data: SearchEntry[];
   placeholderText?: string;
 };
 
 const {
   data = [],
-  placeholderText = "What are you looking for?",
+  placeholderText = "Search posts and projects...",
 } = Astro.props as Props;
 
-const items = data.map((post) => {
-  const tokens = [
-    post.slug,
-    post.data.title,
-    post.data.summary,
-    ...(post.data.tags ?? []),
+const items = data.map((entry: SearchEntry) => {
+  const tokens: string[] = [
+    entry.collection,
+    entry.slug,
+    entry.data.title,
+    entry.data.summary,
+    ...(entry.data.tags ?? []),
   ];
 
   const searchText = tokens
-    .filter((token): token is string => typeof token === "string" && token.length > 0)
+    .filter((token: string) => token.length > 0)
     .join(" ")
     .toLowerCase();
 
   return {
-    post,
+    entry,
     searchText,
   };
 });
@@ -35,8 +38,8 @@ const items = data.map((post) => {
 
 <div class="flex flex-col" data-search-root>
   <SearchBar
-    id="blog-search"
-    label="Search blog posts"
+    id="site-search"
+    label="Search posts and projects"
     placeholderText={placeholderText}
   />
 
@@ -47,9 +50,9 @@ const items = data.map((post) => {
   </div>
 
   <ul data-search-results class="mt-3 hidden flex-col gap-3">
-    {items.map(({ post, searchText }) => (
+    {items.map(({ entry, searchText }) => (
       <li data-search-item data-search-text={searchText} hidden>
-        <ArrowCard entry={post} />
+        <ArrowCard entry={entry} />
       </li>
     ))}
   </ul>
@@ -87,17 +90,13 @@ const items = data.map((post) => {
       return;
     }
 
-    const normalize = (value: string): string => {
-      return value.trim().toLowerCase();
-    };
+    const normalize = (value: string): string => value.trim().toLowerCase();
 
     const render = (): void => {
       const query = normalize(input.value);
-
       const tokens = query
         .split(/\s+/)
         .filter((token: string) => token.length > 0);
-
       const shouldSearch = query.length >= 2;
       let visibleCount = 0;
 
@@ -107,7 +106,6 @@ const items = data.map((post) => {
         }
 
         const searchText = item.dataset.searchText ?? "";
-
         const isMatch =
           shouldSearch &&
           tokens.every((token: string) => searchText.includes(token));
@@ -124,11 +122,7 @@ const items = data.map((post) => {
           "hidden",
           !shouldSearch || visibleCount === 0
         );
-
-        resultsList.classList.toggle(
-          "flex",
-          shouldSearch && visibleCount > 0
-        );
+        resultsList.classList.toggle("flex", shouldSearch && visibleCount > 0);
       }
 
       if (meta instanceof HTMLElement) {

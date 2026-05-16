@@ -1,69 +1,182 @@
 ---
-import { SITE, LINKS } from "../consts"
-import { cn } from "../lib/utils"
-const { pathname } = Astro.url
-const subpath = pathname.match(/[^/]+/g)
-import Container from "@components/Container.astro"
+import { SITE, LINKS } from "@/consts";
+import { cn } from "../lib/utils";
+import Container from "@components/Container.astro";
+
+const { pathname } = Astro.url;
+const subpath = pathname.match(/[^/]+/g);
+const firstSegment = subpath?.[0] ? `/${subpath[0]}` : "/";
 ---
 
-<header id="header" class="fixed top-0 w-full h-16 z-50 ">
+<header id="header" class="fixed top-0 z-50 h-16 w-full">
   <Container size="md">
     <div class="relative h-full w-full">
-      <div class="absolute left-0 top-1/2 -translate-y-1/2 flex gap-1 font-semibold">
-        <a href="/" class="flex gap-1 text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
-          <svg class="size-6 fill-current">
+      <div class="absolute left-0 top-1/2 flex -translate-y-1/2 gap-1 font-semibold">
+        <a
+          href="/"
+          class="flex gap-1 text-current transition-colors duration-300 ease-in-out hover:text-black dark:hover:text-white"
+        >
+          <svg class="size-6 fill-current" aria-hidden="true">
             <use href="/brand.svg#brand"></use>
           </svg>
-          <div>
-            {SITE.TITLE}
-          </div>
+          <div>{SITE.TITLE}</div>
         </a>
       </div>
 
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <nav class="hidden md:flex items-center justify-center text-sm gap-1">
-        {
-          LINKS.map((LINK) => (
-            <a href={LINK.HREF} class={cn("h-8 rounded-full px-3 text-current", "flex items-center justify-center", "transition-colors duration-300 ease-in-out", pathname === LINK.HREF || "/" + subpath?.[0] === LINK.HREF ? "bg-black dark:bg-white text-white dark:text-black" : "hover:bg-black/5 dark:hover:bg-white/20 hover:text-black dark:hover:text-white")}>
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <nav class="hidden items-center justify-center gap-1 text-sm md:flex">
+          {LINKS.map((LINK) => (
+            <a
+              href={LINK.HREF}
+              class={cn(
+                "flex h-8 items-center justify-center rounded-full px-3 text-current",
+                "transition-colors duration-300 ease-in-out",
+                pathname === LINK.HREF || firstSegment === LINK.HREF
+                  ? "bg-black text-white dark:bg-white dark:text-black"
+                  : "hover:bg-black/5 hover:text-black dark:hover:bg-white/20 dark:hover:text-white"
+              )}
+            >
               {LINK.TEXT}
             </a>
-          ))
-        }
-      </nav>
+          ))}
+        </nav>
+      </div>
+
+      <div class="absolute right-0 top-1/2 flex -translate-y-1/2 gap-1">
+        <a
+          href="/search"
+          aria-label={`Search blog posts and projects on ${SITE.TITLE}`}
+          class={cn(
+            "hidden size-9 items-center justify-center rounded-full border border-black/10 bg-transparent p-2 md:flex",
+            "text-current transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black",
+            "dark:border-white/25 dark:hover:bg-white/20 dark:hover:text-white",
+            pathname === "/search" || firstSegment === "/search"
+              ? "pointer-events-none bg-black text-white dark:bg-white dark:text-black"
+              : ""
+          )}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-full"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </a>
+
+        <a
+          href="/rss.xml"
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`RSS feed for ${SITE.TITLE}`}
+          class="hidden size-9 items-center justify-center rounded-full border border-black/10 bg-transparent p-2 text-current transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black dark:border-white/25 dark:hover:bg-white/20 dark:hover:text-white md:flex"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-full"
+            aria-hidden="true"
+          >
+            <path d="M4 11a9 9 0 0 1 9 9"></path>
+            <path d="M4 4a16 16 0 0 1 16 16"></path>
+            <circle cx="5" cy="19" r="1"></circle>
+          </svg>
+        </a>
+
+        <button
+          id="header-theme-button"
+          type="button"
+          aria-label="Toggle light and dark theme"
+          class="hidden size-9 items-center justify-center rounded-full border border-black/10 bg-transparent p-2 text-current transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black dark:border-white/25 dark:hover:bg-white/20 dark:hover:text-white md:flex"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="block size-full dark:hidden"
+            aria-hidden="true"
+          >
+            <path d="M12 3a6 6 0 0 0 9 7.5A9 9 0 1 1 12 3Z"></path>
+          </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="hidden size-full dark:block"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+        </button>
+
+        <button
+          id="header-drawer-button"
+          type="button"
+          aria-label="Toggle drawer open and closed"
+          class="flex size-9 items-center justify-center rounded-full border border-black/10 bg-transparent p-2 text-current transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-black dark:border-white/25 dark:hover:bg-white/20 dark:hover:text-white md:hidden"
+        >
+          <svg
+            id="drawer-open"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-full"
+            aria-hidden="true"
+          >
+            <path d="M4 6h16"></path>
+            <path d="M4 12h16"></path>
+            <path d="M4 18h16"></path>
+          </svg>
+          <svg
+            id="drawer-close"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="size-full"
+            aria-hidden="true"
+          >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
     </div>
-
-    <div class="buttons absolute right-0 top-1/2 -translate-y-1/2 flex gap-1">
-      <a href="/search" aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out", pathname === "/search" || "/" + subpath?.[0] === "/search" ? "pointer-events-none bg-black dark:bg-white text-white dark:text-black" : "")}>
-        <svg class="size-full">
-          <use href="/ui.svg#search"></use>
-        </svg>
-      </a>
-
-      <a href="/rss.xml" target="_blank" aria-label={`Rss feed for ${SITE.TITLE}`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg class="size-full">
-          <use href="/ui.svg#rss"></use>
-        </svg>
-      </a>
-
-      <button id="header-theme-button" aria-label={`Toggle light and dark theme`} class={cn("hidden md:flex", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg class="size-full block dark:hidden">
-          <use href="/ui.svg#sun"></use>
-        </svg>
-        <svg class="size-full hidden dark:block">
-          <use href="/ui.svg#moon"></use>
-        </svg>
-      </button>
-
-      <button id="header-drawer-button" aria-label={`Toggle drawer open and closed`} class={cn("flex md:hidden", "size-9 rounded-full p-2 items-center justify-center", "bg-transparent hover:bg-black/5 dark:hover:bg-white/20", "stroke-current hover:stroke-black hover:dark:stroke-white", "border border-black/10 dark:border-white/25", "transition-colors duration-300 ease-in-out")}>
-        <svg id="drawer-open" class="size-full">
-          <use href="/ui.svg#menu"></use>
-        </svg>
-        <svg id="drawer-close" class="size-full">
-          <use href="/ui.svg#x"></use>
-        </svg>
-      </button>
-    </div>
-  </div>
   </Container>
 </header>
 
@@ -87,17 +200,23 @@ import Container from "@components/Container.astro"
 
 <script is:inline>
   function toggleDrawer() {
-    const drawer = document.getElementById("drawer")
-    const drawerButton = document.getElementById("header-drawer-button")
-    drawer?.classList.toggle("open")
-    drawerButton?.classList.toggle("open")
+    const drawer = document.getElementById("drawer");
+    const drawerButton = document.getElementById("header-drawer-button");
+    drawer?.classList.toggle("open");
+    drawerButton?.classList.toggle("open");
   }
 
   function initializeDrawerButton() {
-    const drawerButton = document.getElementById("header-drawer-button")
-    drawerButton?.addEventListener("click", toggleDrawer)
+    const drawerButton = document.getElementById("header-drawer-button");
+
+    if (!drawerButton || drawerButton.dataset.drawerReady === "true") {
+      return;
+    }
+
+    drawerButton.dataset.drawerReady = "true";
+    drawerButton.addEventListener("click", toggleDrawer);
   }
 
-  document.addEventListener("astro:after-swap", initializeDrawerButton)
-  initializeDrawerButton()
+  document.addEventListener("astro:after-swap", initializeDrawerButton);
+  initializeDrawerButton();
 </script>

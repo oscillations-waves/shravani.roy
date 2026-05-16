@@ -6,24 +6,49 @@ import BottomLayout from "../../layouts/BottomLayout.astro";
 import Search from "@components/Search.astro";
 import { SEARCH } from "@/consts";
 
+type SearchEntry = CollectionEntry<"blog"> | CollectionEntry<"projects">;
+
+const dateToTime = (value: unknown, label: string): number => {
+  if (value instanceof Date) {
+    const time = value.getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const time = new Date(value).getTime();
+
+    if (!Number.isNaN(time)) {
+      return time;
+    }
+  }
+
+  throw new Error(`Invalid date for ${label}: ${String(value)}`);
+};
+
 const posts = (await getCollection("blog")).filter((post) => !post.data.draft);
 
 const projects = (await getCollection("projects")).filter(
-  (post) => !post.data.draft,
+  (project) => !project.data.draft
 );
 
-const data = [...posts, ...projects] as CollectionEntry<"blog">[];
+const data: SearchEntry[] = [...posts, ...projects].sort(
+  (a, b) =>
+    dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
+    dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
+);
 ---
 
 <PageLayout title={SEARCH.TITLE} description={SEARCH.DESCRIPTION}>
   <TopLayout>
-    <div class="animate page-heading">
+    <div class="page-heading">
       {SEARCH.TITLE}
     </div>
   </TopLayout>
+
   <BottomLayout>
-    <div class="animate">
-      <Search data={data} />
-    </div>
+    <Search data={data} placeholderText="Search posts and projects..." />
   </BottomLayout>
 </PageLayout>

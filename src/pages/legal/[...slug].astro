@@ -25,7 +25,7 @@ const { Content } = await doc.render();
 
 <PageLayout title={title} description={`${title} for ${SITE.TITLE}`}>
   <TopLayout>
-    <div class="animate">
+    <div>
       <div class="page-heading">
         {title}
       </div>
@@ -35,7 +35,7 @@ const { Content } = await doc.render();
     </div>
   </TopLayout>
   <BottomLayout>
-    <article class="animate">
+    <article>
       <Content/>
     </article>
   </BottomLayout>
