@@ -1,7 +1,15 @@
 import { defineCollection, z } from "astro:content"
+import { glob } from "astro/loaders"
+
+const stripIndex = ({ entry }: { entry: string }) =>
+  entry.replace(/\.(md|mdx)$/, "").replace(/\/index$/, "")
 
 const work = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/work",
+    generateId: stripIndex,
+  }),
   schema: z.object({
     company: z.string(),
     role: z.string(),
@@ -11,7 +19,11 @@ const work = defineCollection({
 })
 
 const blog = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/blog",
+    generateId: stripIndex,
+  }),
   schema: z.object({
     title: z.string(),
     summary: z.string(),
@@ -22,7 +34,11 @@ const blog = defineCollection({
 })
 
 const projects = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/projects",
+    generateId: stripIndex,
+  }),
   schema: z.object({
     title: z.string(),
     summary: z.string(),
@@ -35,7 +51,11 @@ const projects = defineCollection({
 })
 
 const legal = defineCollection({
-  type: "content",
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/legal",
+    generateId: stripIndex,
+  }),
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),

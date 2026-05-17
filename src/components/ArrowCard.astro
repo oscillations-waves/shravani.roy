@@ -10,8 +10,8 @@ type Props = {
 
 const { entry } = Astro.props as Props;
 
-const href = `/${entry.collection}/${entry.slug}`;
-const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.slug}.date`);
+const href = `/${entry.collection}/${entry.id}`;
+const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.id}.date`);
 ---
 
 <a

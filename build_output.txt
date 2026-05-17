@@ -1,0 +1,150 @@
+
+> shravani-roy@1.0.0 build
+> astro check && astro build
+
+✘ [ERROR] The build was canceled
+
+09:52:51 [types] Generated 42ms
+09:52:51 [check] Getting diagnostics for Astro files in /Users/shroy/Documents/shravani.roy...
+[96msrc/pages/rss.xml.ts[0m:[93m27[0m:[93m29[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m27[0m         : `/projects/${item.slug}/`,
+[7m  [0m [91m                            ~~~~[0m
+[96msrc/pages/rss.xml.ts[0m:[93m26[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m26[0m         ? `/blog/${item.slug}/`
+[7m  [0m [91m                        ~~~~[0m
+[96msrc/pages/rss.xml.ts[0m:[93m25[0m:[93m18[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m25[0m       link: item.slug.startsWith("blog")
+[7m  [0m [91m                 ~~~~[0m
+
+[96msrc/components/ArrowCard.astro[0m:[93m14[0m:[93m76[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type 'Entry'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m14[0m const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.slug}.date`);
+[7m  [0m [91m                                                                           ~~~~[0m
+[96msrc/components/ArrowCard.astro[0m:[93m13[0m:[93m44[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type 'Entry'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m13[0m const href = `/${entry.collection}/${entry.slug}`;
+[7m  [0m [91m                                           ~~~~[0m
+
+[96msrc/components/Search.astro[0m:[93m18[0m:[93m10[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m18[0m     post.slug,
+[7m  [0m [91m         ~~~~[0m
+
+[96msrc/components/SearchCollection.astro[0m:[93m129[0m:[93m11[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type 'SearchEntry'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m129[0m     entry.slug,
+[7m   [0m [91m          ~~~~[0m
+[96msrc/components/SearchCollection.astro[0m:[93m118[0m:[93m40[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m118[0m   return `/${entry.collection}/${entry.slug}`;
+[7m   [0m [91m                                       ~~~~[0m
+[96msrc/components/SearchCollection.astro[0m:[93m102[0m:[93m67[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m102[0m   return formatDate(entry.data.date, `${entry.collection}/${entry.slug}.date`);
+[7m   [0m [91m                                                                  ~~~~[0m
+[96msrc/components/SearchCollection.astro[0m:[93m36[0m:[93m35[0m - [91merror[0m[90m ts(2554): [0mExpected 1 arguments, but got 2.
+
+[7m36[0m   const date = toValidDate(value, label);
+[7m  [0m [91m                                  ~~~~~[0m
+
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m48[0m:[93m42[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m48[0m     <a href={`/${next.collection}/${next.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-colors duration-300 ease-in-out">
+[7m  [0m [91m                                         ~~~~[0m
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m32[0m:[93m42[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m32[0m     <a href={`/${prev.collection}/${prev.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 blend">
+[7m  [0m [91m                                         ~~~~[0m
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m22[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m22[0m const index = items.findIndex(x => x.slug === entry.slug)
+[7m  [0m [91m                                                    ~~~~[0m
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m22[0m:[93m38[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m22[0m const index = items.findIndex(x => x.slug === entry.slug)
+[7m  [0m [91m                                     ~~~~[0m
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m20[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m20[0m       toValidDate(a.data.date, `${a.collection}/${a.slug}.date`).getTime()
+[7m  [0m [91m                                                    ~~~~[0m
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m19[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m19[0m       toValidDate(b.data.date, `${b.collection}/${b.slug}.date`).getTime() -
+[7m  [0m [91m                                                    ~~~~[0m
+[96msrc/layouts/ArticleBottomLayout.astro[0m:[93m12[0m:[93m33[0m - [91merror[0m[90m ts(2339): [0mProperty 'render' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'render' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m12[0m const { Content } = await entry.render()
+[7m  [0m [91m                                ~~~~~~[0m
+
+[96msrc/layouts/ArticleTopLayout.astro[0m:[93m49[0m:[93m66[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m49[0m const dateLabel = formatArticleDate(date, `${collection}/${entry.slug}.date`);
+[7m  [0m [91m                                                                 ~~~~[0m
+[96msrc/layouts/ArticleTopLayout.astro[0m:[93m11[0m:[93m21[0m - [91merror[0m[90m ts(2339): [0mProperty 'body' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+
+[7m11[0m const { collection, body } = entry;
+[7m  [0m [91m                    ~~~~[0m
+
+[96msrc/pages/index.astro[0m:[93m20[0m:[93m55[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m20[0m         toValidDate(a.data.date, `${a.collection}/${a.slug}.date`).getTime()
+[7m  [0m [91m                                                      ~~~~[0m
+[96msrc/pages/index.astro[0m:[93m19[0m:[93m55[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; } | { id: string; collection: "projects"; data: any; }'.
+  Property 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m19[0m         toValidDate(b.data.date, `${b.collection}/${b.slug}.date`).getTime() -
+[7m  [0m [91m                                                      ~~~~[0m
+
+[96msrc/pages/blog/[...slug].astro[0m:[93m13[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m13[0m   params: { slug: post.slug },
+[7m  [0m [91m                       ~~~~[0m
+
+[96msrc/pages/blog/index.astro[0m:[93m16[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m16[0m       toValidDate(a.data.date, `${a.collection}/${a.slug}.date`).getTime()
+[7m  [0m [91m                                                    ~~~~[0m
+[96msrc/pages/blog/index.astro[0m:[93m15[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "blog"; data: any; }'.
+
+[7m15[0m       toValidDate(b.data.date, `${b.collection}/${b.slug}.date`).getTime() -
+[7m  [0m [91m                                                    ~~~~[0m
+
+[96msrc/pages/projects/[...slug].astro[0m:[93m13[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "projects"; data: any; }'.
+
+[7m13[0m   params: { slug: project.slug },
+[7m  [0m [91m                          ~~~~[0m
+
+[96msrc/pages/projects/index.astro[0m:[93m16[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "projects"; data: any; }'.
+
+[7m16[0m       toValidDate(a.data.date, `${a.collection}/${a.slug}.date`).getTime()
+[7m  [0m [91m                                                    ~~~~[0m
+[96msrc/pages/projects/index.astro[0m:[93m15[0m:[93m53[0m - [91merror[0m[90m ts(2339): [0mProperty 'slug' does not exist on type '{ id: string; collection: "projects"; data: any; }'.
+
+[7m15[0m       toValidDate(b.data.date, `${b.collection}/${b.slug}.date`).getTime() -
+[7m  [0m [91m                                                    ~~~~[0m
+
+Result (33 files): 
+- 27 errors
+- 0 warnings
+- 0 hints
+

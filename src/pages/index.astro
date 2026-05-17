@@ -6,53 +6,23 @@ import PageLayout from "../layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import StackCard from "@components/StackCard.astro";
 import { SITE, SOCIALS } from "@/consts";
+import { toValidDate } from "@/lib/utils";
 
 type BlogEntry = CollectionEntry<"blog">;
 type ProjectEntry = CollectionEntry<"projects">;
 
-const dateToTime = (value: unknown, label: string): number => {
-  if (value instanceof Date) {
-    const time = value.getTime();
+const recent = <T extends BlogEntry | ProjectEntry>(entries: T[], limit = 3): T[] =>
+  entries
+    .filter((entry) => !entry.data.draft)
+    .sort(
+      (a, b) =>
+        toValidDate(b.data.date, `${b.collection}/${b.id}.date`).getTime() -
+        toValidDate(a.data.date, `${a.collection}/${a.id}.date`).getTime()
+    )
+    .slice(0, limit);
 
-    if (!Number.isNaN(time)) {
-      return time;
-    }
-
-    throw new Error(`Invalid date for ${label}: received Invalid Date`);
-  }
-
-  if (typeof value === "string" || typeof value === "number") {
-    const time = new Date(value).getTime();
-
-    if (!Number.isNaN(time)) {
-      return time;
-    }
-
-    throw new Error(`Invalid date for ${label}: ${String(value)}`);
-  }
-
-  throw new Error(
-    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
-  );
-};
-
-const posts = ((await getCollection("blog")) as BlogEntry[])
-  .filter((post) => !post.data.draft)
-  .sort(
-    (a, b) =>
-      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
-      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
-  )
-  .slice(0, 3);
-
-const projects = ((await getCollection("projects")) as ProjectEntry[])
-  .filter((project) => !project.data.draft)
-  .sort(
-    (a, b) =>
-      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
-      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
-  )
-  .slice(0, 3);
+const posts = recent((await getCollection("blog")) as BlogEntry[]);
+const projects = recent((await getCollection("projects")) as ProjectEntry[]);
 
 const stack = [
   {

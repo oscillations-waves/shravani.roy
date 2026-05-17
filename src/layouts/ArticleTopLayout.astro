@@ -46,8 +46,8 @@ const formatArticleDate = (value: unknown, label = "date"): string => {
   );
 };
 
-const dateLabel = formatArticleDate(date, `${collection}/${entry.slug}.date`);
-const readingTimeLabel = readingTime(body);
+const dateLabel = formatArticleDate(date, `${collection}/${entry.id}.date`);
+const readingTimeLabel = readingTime(body ?? "");
 ---
 
 <div>

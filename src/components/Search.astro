@@ -15,7 +15,7 @@ const {
 
 const items = data.map((post) => {
   const tokens = [
-    post.slug,
+    post.id,
     post.data.title,
     post.data.summary,
     ...(post.data.tags ?? []),

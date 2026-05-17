@@ -19,7 +19,7 @@ const {
   entry_name = "items",
 } = Astro.props as Props;
 
-const toValidDate = (value: unknown, label = "date"): Date | null => {
+const toValidDate = (value: unknown): Date | null => {
   if (value instanceof Date) {
     return Number.isNaN(value.getTime()) ? null : value;
   }
@@ -32,8 +32,8 @@ const toValidDate = (value: unknown, label = "date"): Date | null => {
   return null;
 };
 
-const formatDate = (value: unknown, label = "date") => {
-  const date = toValidDate(value, label);
+const formatDate = (value: unknown) => {
+  const date = toValidDate(value);
 
   if (!date) {
     return "";
@@ -47,7 +47,7 @@ const formatDate = (value: unknown, label = "date") => {
 };
 
 const formatDateRange = (start: unknown, end: unknown) => {
-  const startLabel = formatDate(start, "dateStart");
+  const startLabel = formatDate(start);
 
   if (!end) {
     return startLabel;
@@ -65,7 +65,7 @@ const formatDateRange = (start: unknown, end: unknown) => {
     }
   }
 
-  const endLabel = formatDate(end, "dateEnd");
+  const endLabel = formatDate(end);
 
   if (!startLabel && !endLabel) {
     return "";
@@ -99,7 +99,7 @@ const getDateLabel = (entry: SearchEntry) => {
     return formatDateRange(entry.data.dateStart, entry.data.dateEnd);
   }
 
-  return formatDate(entry.data.date, `${entry.collection}/${entry.slug}.date`);
+  return formatDate(entry.data.date);
 };
 
 const getTags = (entry: SearchEntry) => {
@@ -115,7 +115,7 @@ const getHref = (entry: SearchEntry) => {
     return "";
   }
 
-  return `/${entry.collection}/${entry.slug}`;
+  return `/${entry.collection}/${entry.id}`;
 };
 
 const items = data.map((entry) => {
@@ -126,7 +126,7 @@ const items = data.map((entry) => {
   const href = getHref(entry);
 
   const searchText = [
-    entry.slug,
+    entry.id,
     entry.collection,
     title,
     summary,

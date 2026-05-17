@@ -6,39 +6,14 @@ import TopLayout from "../../layouts/TopLayout.astro";
 import BottomLayout from "../../layouts/BottomLayout.astro";
 import SearchCollection from "@components/SearchCollection.astro";
 import { BLOG } from "@/consts";
-
-const dateToTime = (value: unknown, label: string): number => {
-  if (value instanceof Date) {
-    const time = value.getTime();
-
-    if (!Number.isNaN(time)) {
-      return time;
-    }
-
-    throw new Error(`Invalid date for ${label}: received Invalid Date`);
-  }
-
-  if (typeof value === "string" || typeof value === "number") {
-    const time = new Date(value).getTime();
-
-    if (!Number.isNaN(time)) {
-      return time;
-    }
-
-    throw new Error(`Invalid date for ${label}: ${String(value)}`);
-  }
-
-  throw new Error(
-    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
-  );
-};
+import { toValidDate } from "@/lib/utils";
 
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
   .sort(
     (a, b) =>
-      dateToTime(b.data.date, `${b.collection}/${b.slug}.date`) -
-      dateToTime(a.data.date, `${a.collection}/${a.slug}.date`)
+      toValidDate(b.data.date, `${b.collection}/${b.id}.date`).getTime() -
+      toValidDate(a.data.date, `${a.collection}/${a.id}.date`).getTime()
   );
 
 const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort(

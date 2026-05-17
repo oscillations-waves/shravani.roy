@@ -1,36 +1,11 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 import PageLayout from "../../layouts/PageLayout.astro";
 import TopLayout from "../../layouts/TopLayout.astro";
 import BottomLayout from "../../layouts/BottomLayout.astro";
 import { WORK } from "@/consts";
-
-const dateToTime = (value: unknown, label: string): number => {
-  if (value instanceof Date) {
-    const time = value.getTime();
-
-    if (!Number.isNaN(time)) {
-      return time;
-    }
-
-    throw new Error(`Invalid date for ${label}: received Invalid Date`);
-  }
-
-  if (typeof value === "string" || typeof value === "number") {
-    const time = new Date(value).getTime();
-
-    if (!Number.isNaN(time)) {
-      return time;
-    }
-
-    throw new Error(`Invalid date for ${label}: ${String(value)}`);
-  }
-
-  throw new Error(
-    `Invalid date for ${label}: expected Date/string/number, received ${typeof value}`
-  );
-};
+import { toValidDate } from "@/lib/utils";
 
 const formatWorkDate = (value: unknown): string => {
   if (typeof value === "string") {
@@ -68,13 +43,13 @@ const formatWorkDate = (value: unknown): string => {
 
 const collection = (await getCollection("work")).sort(
   (a, b) =>
-    dateToTime(b.data.dateStart, `${b.collection}/${b.slug}.dateStart`) -
-    dateToTime(a.data.dateStart, `${a.collection}/${a.slug}.dateStart`)
+    toValidDate(b.data.dateStart, `${b.collection}/${b.id}.dateStart`).getTime() -
+    toValidDate(a.data.dateStart, `${a.collection}/${a.id}.dateStart`).getTime()
 );
 
 const work = await Promise.all(
   collection.map(async (item) => {
-    const { Content } = await item.render();
+    const { Content } = await render(item);
 
     return {
       ...item,
