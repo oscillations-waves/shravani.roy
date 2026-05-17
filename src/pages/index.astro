@@ -49,11 +49,11 @@ const stack = [
 ---
 
 <PageLayout title="Home" description={SITE.DESCRIPTION}>
-  <main class="relative min-h-screen overflow-hidden bg-white text-black dark:bg-black dark:text-white">
-    <!-- Static Background -->
+  <main class="relative min-h-screen overflow-hidden bg-transparent text-black dark:bg-black dark:text-white">
+    <!-- Subtle radial accent (kept only for dark mode glow; light mode lets the body gradient breathe). -->
     <div
       aria-hidden="true"
-      class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.20),_transparent_35%),linear-gradient(to_bottom,_#ffffff,_#f5f5f5)] dark:bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.25),_transparent_35%),linear-gradient(to_bottom,_#020617,_#000000)]"
+      class="pointer-events-none fixed inset-0 -z-10 dark:bg-[radial-gradient(circle_at_top,_rgba(120,119,198,0.25),_transparent_35%),linear-gradient(to_bottom,_#020617,_#000000)]"
     >
     </div>
 
@@ -63,7 +63,7 @@ const stack = [
         <div
           class="absolute left-1/2 top-0 aspect-square min-h-[100vh] w-[250vw] -translate-x-1/2 rounded-full bg-gradient-to-b from-black/10 from-0% to-transparent to-5% p-[1px] dark:from-white/20"
         >
-          <div class="flex h-full w-full justify-center overflow-hidden rounded-full bg-white p-[1px] dark:bg-black">
+          <div class="flex h-full w-full justify-center overflow-hidden rounded-full bg-transparent p-[1px] dark:bg-black">
             <div class="h-20 w-full rounded-full bg-neutral-900/10 blur-3xl dark:bg-white/25"></div>
           </div>
         </div>
@@ -80,7 +80,7 @@ const stack = [
           </h1>
 
           <p class="mt-2 text-sm opacity-75 md:text-base lg:text-lg">
-            Currently designing products for humans.
+            Building systems. Collecting stories. Chasing quiet.
           </p>
 
           <div class="mt-5 flex flex-wrap justify-center gap-4">
@@ -100,43 +100,63 @@ const stack = [
           </div>
         </div>
       </div>
+
+      <!-- Scroll-to-explore indicator -->
+      <a
+        href="#about"
+        aria-label="Scroll down to explore"
+        class="group absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-widest text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white"
+      >
+        <span>Scroll to explore</span>
+        <svg
+          class="size-5 animate-bounce"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14" />
+          <path d="m19 12-7 7-7-7" />
+        </svg>
+      </a>
     </section>
 
-    <div class="relative bg-white dark:bg-black">
+    <div id="about" class="relative bg-transparent dark:bg-black">
       <div class="mx-auto max-w-screen-sm space-y-24 p-5 pb-16">
         <!-- About Section -->
         <section>
+          <h2 class="page-heading mb-4 text-xl md:text-2xl">About</h2>
           <article class="space-y-4">
             <p>
-              I am a <b><i>software engineer</i></b>,
-              <b><i>UI/UX designer</i></b>,
-              <b><i>product planner</i></b>,
-              <b><i>mentor</i></b>,
-              <b><i>student</i></b>,
-              <b><i>minimalist</i></b>,
-              <b><i>eternal optimist</i></b>,
-              <b><i>crypto enthusiast</i></b>, and
-              <b><i>sarcasm connoisseur</i></b>.
+              I&rsquo;m a software engineer drawn to systems, stories, and
+              the quiet details that make both work and life meaningful.
+              Professionally, I spend most of my time building backend systems,
+              untangling complex problems, and exploring the architecture behind
+              scalable technology.
             </p>
 
             <p>
-              I love to both build and break things. I am motivated by challenging
-              projects with self-guided research and dynamic problem solving.
-              My true passion is crafting creative front-end designs with unique
-              takes on color, typography, and motion.
-            </p>
-
-            <p>
-              During my career, I have built products ranging from marketing and
-              ecommerce websites to complex enterprise apps, with a focus on
-              delivering fast, elegant code along with thoughtful user interfaces.
-            </p>
-
-            <p>
-              I currently work as a software engineer at StreamlineFS, where I do
-              product planning, design, and development.
+              Outside of code, I love getting lost in books, collecting films like
+              memories, and finding joy in the simple pleasures of existence
+              &mdash; rain against a window, late-night conversations, good
+              coffee, old songs, and moments of stillness in a world that moves
+              too fast.
             </p>
           </article>
+        </section>
+
+        <!-- Mission statement / divider between About and Recent posts -->
+        <section aria-label="About this blog" class="flex flex-col items-center gap-6 text-center">
+          <span class="h-px w-16 bg-black/20 dark:bg-white/20"></span>
+          <p class="max-w-prose text-base italic text-black/80 md:text-lg dark:text-white/80">
+            This blog is a little corner of the internet where I write about
+            technology, cinema, ideas, observations, and the things that stay
+            with me long after the screen goes dark.
+          </p>
+          <span class="h-px w-16 bg-black/20 dark:bg-white/20"></span>
         </section>
 
         <!-- Blog Preview Section -->
@@ -219,42 +239,34 @@ const stack = [
           </div>
         </section>
 
-        <!-- Contact Section -->
-        <section>
-          <div>
-            <p class="font-semibold text-black dark:text-white">
-              Let's Connect
-            </p>
-
-            <p>
-              Reach out to me via email or on social media.
-            </p>
-
-            <div class="mt-4 grid grid-cols-4 gap-y-2 auto-cols-min">
-              {SOCIALS.map((social) => (
-                <div class="contents">
-                  <div class="col-span-1 flex items-center gap-1">
-                    <span class="truncate whitespace-nowrap">
-                      {social.NAME}
-                    </span>
-                  </div>
-
-                  <div class="col-span-3 truncate">
-                    <a
-                      href={social.HREF}
-                      target="_blank"
-                      rel="noreferrer"
-                      class="group col-span-3 flex w-fit items-center gap-1 underline decoration-black/25 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
-                    >
-                      <span class="text-black/75 group-hover:text-black dark:text-white/75 group-hover:dark:text-white">
-                        {social.TEXT}
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <!-- Let's Connect CTA -->
+        <section class="flex flex-col items-center gap-4 text-center">
+          <p class="font-semibold text-black dark:text-white text-xl md:text-2xl">
+            Let&rsquo;s connect
+          </p>
+          <p class="max-w-prose">
+            I&rsquo;m always up for a good conversation about technology,
+            cinema, books, or anything that&rsquo;s been on your mind.
+          </p>
+          <a
+            href="/about"
+            class="mt-2 inline-flex items-center gap-2 rounded bg-black px-5 py-2.5 text-sm text-white hover:opacity-75 dark:bg-white dark:text-black md:text-base"
+          >
+            More about me
+            <svg
+              class="size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
         </section>
       </div>
     </div>

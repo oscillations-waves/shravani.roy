@@ -1,0 +1,87 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro";
+import TopLayout from "@/layouts/TopLayout.astro";
+import BottomLayout from "@/layouts/BottomLayout.astro";
+import { SITE, SOCIALS } from "@/consts";
+---
+
+<PageLayout
+  title="About"
+  description="A little more about Shravani Roy — software engineer, reader, and quiet observer."
+>
+  <TopLayout>
+    <!-- Hero: photo placeholder on the left, name + role on the right. -->
+    <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
+      <!-- Photo placeholder. Swap the inner content for an <img src="..." /> when ready. -->
+      <div
+        class="flex size-36 shrink-0 items-center justify-center overflow-hidden rounded-full border border-black/15 bg-white/40 text-3xl font-semibold text-black/40 backdrop-blur-sm md:size-44 dark:border-white/20 dark:bg-white/5 dark:text-white/40"
+        aria-label="Photo placeholder"
+      >
+        SR
+      </div>
+
+      <div class="text-center sm:text-left">
+        <h1 class="page-heading text-4xl md:text-5xl lg:text-6xl">
+          {SITE.AUTHOR}
+        </h1>
+        <p class="mt-2 text-base text-black/70 md:text-lg dark:text-white/70">
+          Senior Software Engineer at <a
+            href="https://www.progress.com/"
+            target="_blank"
+            rel="noreferrer"
+            class="underline decoration-black/30 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
+          >Progress Chef</a>
+        </p>
+      </div>
+    </div>
+  </TopLayout>
+
+  <BottomLayout>
+    <article class="space-y-6">
+      <p>
+        I&rsquo;m a software engineer drawn to systems, stories, and
+        the quiet details that make both work and life meaningful. Professionally,
+        I spend most of my time building backend systems, untangling complex
+        problems, and exploring the architecture behind scalable technology.
+      </p>
+
+      <p>
+        Outside of code, I love getting lost in books, collecting films like
+        memories, and finding joy in the simple pleasures of existence
+        &mdash; rain against a window, late-night conversations, good coffee,
+        old songs, and moments of stillness in a world that moves too fast.
+      </p>
+
+      <p class="italic opacity-90">
+        This blog is a little corner of the internet where I write about
+        technology, cinema, ideas, observations, and the things that stay with
+        me long after the screen goes dark.
+      </p>
+
+      <div class="pt-4">
+        <h2 class="page-heading mb-4 text-lg md:text-xl">Find me online</h2>
+
+        <ul class="flex flex-wrap gap-3">
+          {
+            SOCIALS.map((social) => (
+              <li>
+                <a
+                  href={social.HREF}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.NAME}
+                  title={social.NAME}
+                  class="group inline-flex size-11 items-center justify-center rounded-full border border-black/15 bg-white/40 text-black/80 backdrop-blur-sm transition-colors hover:bg-black hover:text-white dark:border-white/20 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white dark:hover:text-black"
+                >
+                  <svg class="size-5 fill-current" aria-hidden="true">
+                    <use href={`/social.svg#${social.ICON}`} />
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </article>
+  </BottomLayout>
+</PageLayout>

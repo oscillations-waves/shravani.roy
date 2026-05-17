@@ -38,6 +38,10 @@ export const LINKS: Links = [
     HREF: "/", 
   },
   { 
+    TEXT: "About", 
+    HREF: "/about", 
+  },
+  { 
     TEXT: "Work", 
     HREF: "/work", 
   },
@@ -76,6 +80,12 @@ export const SOCIALS: Socials = [
     ICON: "instagram",
     TEXT: "shravvanay",
     HREF: "https://www.instagram.com/shravvanay/",
+  },
+  {
+    NAME: "Twitter",
+    ICON: "twitter-x",
+    TEXT: "R0yalisms",
+    HREF: "https://x.com/R0yalisms",
   },
 ]
 
