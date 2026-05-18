@@ -5,21 +5,21 @@ interface Props {
   image?: string
 }
 
+import { withBase } from "@/lib/utils"
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
-const base = import.meta.env.BASE_URL
-
-const { title, description, image = `${base}open-graph.jpg` } = Astro.props
+const { title, description, image = withBase("/open-graph.jpg") } = Astro.props
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+<link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
 <meta name="generator" content={Astro.generator} />
 
-<link rel="preload" href={`${base}fonts/atkinson-regular.woff`} as="font" type="font/woff" crossorigin>
-<link rel="preload" href={`${base}fonts/atkinson-bold.woff`} as="font" type="font/woff" crossorigin>
+<link rel="preload" href={withBase("/fonts/atkinson-regular.woff")} as="font" type="font/woff" crossorigin>
+<link rel="preload" href={withBase("/fonts/atkinson-bold.woff")} as="font" type="font/woff" crossorigin>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
@@ -44,16 +44,16 @@ const { title, description, image = `${base}open-graph.jpg` } = Astro.props
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
 <!-- Sitemap -->
-<link rel="sitemap" href={`${base}sitemap-index.xml`} />
+<link rel="sitemap" href={withBase("/sitemap-index.xml")} />
 
 <!-- RSS Feed -->
 <link rel="alternate" type="application/rss+xml" title={title} href={`${Astro.site}rss.xml`}/>
 
 <!-- Global Scripts -->
-<script is:inline src={`${base}js/theme.js`}></script>
-<script is:inline src={`${base}js/scroll.js`}></script>
-<script is:inline src={`${base}js/animate.js`}></script>
-<script defer is:inline src={`${base}js/copy.js`}></script>
+<script is:inline src={withBase("/js/theme.js")}></script>
+<script is:inline src={withBase("/js/scroll.js")}></script>
+<script is:inline src={withBase("/js/animate.js")}></script>
+<script defer is:inline src={withBase("/js/copy.js")}></script>
 
 <!-- <ViewTransitions  /> -->
 

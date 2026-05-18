@@ -4,8 +4,6 @@ import TopLayout from "@/layouts/TopLayout.astro";
 import BottomLayout from "@/layouts/BottomLayout.astro";
 import { SITE, SOCIALS } from "@/consts";
 import { withBase } from "@/lib/utils";
-
-const base = import.meta.env.BASE_URL;
 ---
 
 <PageLayout
@@ -19,7 +17,7 @@ const base = import.meta.env.BASE_URL;
         class="size-36 shrink-0 overflow-hidden rounded-full border border-black/15 bg-white/40 backdrop-blur-sm md:size-44 dark:border-white/20 dark:bg-white/5"
       >
         <img
-          src={`${base}me.jpg`}
+          src={withBase("/me.jpg")}
           alt={SITE.AUTHOR}
           width="176"
           height="176"
