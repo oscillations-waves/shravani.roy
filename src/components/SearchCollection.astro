@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { withBase } from "@/lib/utils";
 
 type BlogEntry = CollectionEntry<"blog">;
 type ProjectEntry = CollectionEntry<"projects">;
@@ -115,7 +116,7 @@ const getHref = (entry: SearchEntry) => {
     return "";
   }
 
-  return `/${entry.collection}/${entry.id}`;
+  return withBase(`/${entry.collection}/${entry.id}`);
 };
 
 const items = data.map((entry) => {
