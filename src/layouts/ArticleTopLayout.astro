@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { readingTime } from "../lib/utils";
+import { readingTime, withBase } from "../lib/utils";
 
 type Props = {
   entry: CollectionEntry<"projects"> | CollectionEntry<"blog">;
@@ -52,7 +52,7 @@ const readingTimeLabel = readingTime(body ?? "");
 
 <div>
   <a
-    href={`/${collection}`}
+    href={withBase(`/${collection}`)}
     class="group flex w-fit items-center gap-1.5 rounded border border-black/15 p-1.5 text-sm transition-colors duration-300 ease-in-out hover:bg-black/5 dark:border-white/20 hover:dark:bg-white/10"
   >
     <svg

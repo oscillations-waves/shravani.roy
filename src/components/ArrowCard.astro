@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { formatDate } from "@/lib/utils";
+import { formatDate, withBase } from "@/lib/utils";
 
 type Entry = CollectionEntry<"blog"> | CollectionEntry<"projects">;
 
@@ -10,7 +10,7 @@ type Props = {
 
 const { entry } = Astro.props as Props;
 
-const href = `/${entry.collection}/${entry.id}`;
+const href = withBase(`/${entry.collection}/${entry.id}`);
 const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.id}.date`);
 ---
 

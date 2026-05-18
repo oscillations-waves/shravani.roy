@@ -5,6 +5,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Prefix a site-internal path with the configured base URL so links and
+// assets work both at the root in dev and under a sub-path on GitHub Pages.
+export function withBase(path: string): string {
+  const base = import.meta.env.BASE_URL // always ends with "/"
+  if (!path) return base
+  const cleaned = path.startsWith("/") ? path.slice(1) : path
+  return base + cleaned
+}
+
 export function toValidDate(value: unknown, label = "date"): Date {
   if (value instanceof Date) {
     if (!Number.isNaN(value.getTime())) {

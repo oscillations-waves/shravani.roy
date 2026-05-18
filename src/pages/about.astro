@@ -3,6 +3,7 @@ import PageLayout from "@/layouts/PageLayout.astro";
 import TopLayout from "@/layouts/TopLayout.astro";
 import BottomLayout from "@/layouts/BottomLayout.astro";
 import { SITE, SOCIALS } from "@/consts";
+import { withBase } from "@/lib/utils";
 
 const base = import.meta.env.BASE_URL;
 ---
@@ -81,7 +82,7 @@ const base = import.meta.env.BASE_URL;
                   class="group inline-flex size-11 items-center justify-center rounded-full border border-black/15 bg-white/40 text-black/80 backdrop-blur-sm transition-colors hover:bg-black hover:text-white dark:border-white/20 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white dark:hover:text-black"
                 >
                   <svg class="size-5 fill-current" aria-hidden="true">
-                    <use href={`${base}social.svg#${social.ICON}`} />
+                    <use href={`${withBase("/social.svg")}#${social.ICON}`} />
                   </svg>
                 </a>
               </li>

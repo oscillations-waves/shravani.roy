@@ -6,7 +6,7 @@ import PageLayout from "../layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import StackCard from "@components/StackCard.astro";
 import { SITE, SOCIALS } from "@/consts";
-import { toValidDate } from "@/lib/utils";
+import { toValidDate, withBase } from "@/lib/utils";
 
 type BlogEntry = CollectionEntry<"blog">;
 type ProjectEntry = CollectionEntry<"projects">;
@@ -85,14 +85,14 @@ const stack = [
 
           <div class="mt-5 flex flex-wrap justify-center gap-4">
             <a
-              href="/blog"
+              href={withBase("/blog")}
               class="rounded bg-black px-4 py-2 text-xs text-white hover:opacity-75 dark:bg-white dark:text-black md:text-sm lg:text-base"
             >
               Read my blog
             </a>
 
             <a
-              href="/projects"
+              href={withBase("/projects")}
               class="rounded border border-black/25 px-4 py-2 text-xs hover:bg-black/5 dark:border-white/25 hover:dark:bg-white/15 md:text-sm lg:text-base"
             >
               View my work
@@ -168,7 +168,7 @@ const stack = [
               </p>
 
               <a
-                href="/blog"
+                href={withBase("/blog")}
                 class="group flex w-fit items-center gap-1 underline decoration-black/25 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
               >
                 <span class="text-black/75 group-hover:text-black dark:text-white/75 group-hover:dark:text-white">
@@ -220,7 +220,7 @@ const stack = [
               </p>
 
               <a
-                href="/projects"
+                href={withBase("/projects")}
                 class="group flex w-fit items-center gap-1 underline decoration-black/25 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
               >
                 <span class="text-black/75 group-hover:text-black dark:text-white/75 group-hover:dark:text-white">
@@ -249,7 +249,7 @@ const stack = [
             cinema, books, or anything that&rsquo;s been on your mind.
           </p>
           <a
-            href="/about"
+            href={withBase("/about")}
             class="mt-2 inline-flex items-center gap-2 rounded bg-black px-5 py-2.5 text-sm text-white hover:opacity-75 dark:bg-white dark:text-black md:text-base"
           >
             More about me
