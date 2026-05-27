@@ -22,6 +22,7 @@ const { title, summary } = post.data
 ---
 
 <PageLayout title={title} description={summary}>
+  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
   <TopLayout>
     <div class="animate">
       <ArticleTopLayout entry={post}/>
@@ -32,4 +33,5 @@ const { title, summary } = post.data
       <ArticleBottomLayout entry={post} />
     </div>
   </BottomLayout>
+  </div>
 </PageLayout>

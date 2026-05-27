@@ -60,6 +60,7 @@ const work = await Promise.all(
 ---
 
 <PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
+  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
   <TopLayout>
     <div class="page-heading">
       {WORK.TITLE}
@@ -71,15 +72,15 @@ const work = await Promise.all(
       <ul>
         {work.map(({ data, Content }) => (
           <li class="mt-4 border-b border-black/10 py-8 first-of-type:mt-0 first-of-type:pt-0 last-of-type:border-none dark:border-white/25">
-            <div class="mb-4 text-sm uppercase text-black/60 dark:text-white/60">
+            <div class="mb-4 text-sm uppercase text-neutral-800/60 dark:text-white/60">
               {formatWorkDate(data.dateStart)} - {formatWorkDate(data.dateEnd)}
             </div>
 
-            <div class="font-semibold text-black dark:text-white">
+            <div class="font-semibold text-neutral-800 dark:text-white">
               {data.company}
             </div>
 
-            <div class="text-sm font-semibold text-black/70 dark:text-white/70">
+            <div class="text-sm font-semibold text-neutral-800/70 dark:text-white/70">
               {data.role}
             </div>
 
@@ -90,9 +91,10 @@ const work = await Promise.all(
         ))}
       </ul>
     ) : (
-      <p class="text-black/70 dark:text-white/70">
+      <p class="text-neutral-800/70 dark:text-white/70">
         No work entries found.
       </p>
     )}
   </BottomLayout>
+  </div>
 </PageLayout>

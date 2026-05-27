@@ -5,11 +5,32 @@ const { pathname } = Astro.url
 const subpath = pathname.match(/[^/]+/g)
 import Container from "@components/Container.astro"
 
+// On cream-backgrounded pages (about, blog) use dark header text so it's legible.
+const onLightPage =
+  pathname === withBase("/about") ||
+  pathname.startsWith(withBase("/about/")) ||
+  pathname === withBase("/blog") ||
+  pathname.startsWith(withBase("/blog/")) ||
+  pathname === withBase("/work") ||
+  pathname.startsWith(withBase("/work/")) ||
+  pathname === withBase("/career") ||
+  pathname.startsWith(withBase("/career/")) ||
+  pathname === withBase("/projects") ||
+  pathname.startsWith(withBase("/projects/"))
+const textColor = onLightPage ? "text-neutral-800" : "text-white"
+const strokeColor = onLightPage ? "stroke-neutral-800" : "stroke-white"
+const borderColor = onLightPage ? "border-neutral-800/30" : "border-white/30"
+const hoverBg = onLightPage ? "hover:bg-neutral-800/10" : "hover:bg-white/10"
+const activePillBg = onLightPage ? "bg-neutral-800/15" : "bg-white/20"
+
 const iconButton = cn(
   "size-9 rounded-full p-2 items-center justify-center",
-  "bg-transparent hover:bg-black/5 dark:hover:bg-white/20",
-  "stroke-current hover:stroke-black hover:dark:stroke-white",
-  "border border-black/10 dark:border-white/25",
+  "bg-transparent",
+  hoverBg,
+  textColor,
+  strokeColor,
+  "border",
+  borderColor,
   "transition-colors duration-300 ease-in-out",
 )
 const isActive = (href: string) =>
@@ -20,7 +41,7 @@ const isActive = (href: string) =>
   <Container size="md">
     <div class="relative h-full w-full">
       <div class="absolute left-0 top-1/2 -translate-y-1/2 flex gap-1 font-semibold">
-        <a href={withBase("/")} class="flex gap-1 text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out">
+        <a href={withBase("/")} class={cn("flex gap-1 hover:opacity-80 transition-opacity duration-300 ease-in-out", textColor)}>
           <svg class="size-6 fill-current">
             <use href={`${withBase("/brand.svg")}#brand`}></use>
           </svg>
@@ -34,7 +55,7 @@ const isActive = (href: string) =>
       <nav class="hidden md:flex items-center justify-center text-sm gap-1">
         {
           LINKS.map((LINK) => (
-            <a href={withBase(LINK.HREF)} class={cn("h-8 rounded-full px-3 text-current", "flex items-center justify-center", "transition-colors duration-300 ease-in-out", isActive(LINK.HREF) ? "bg-black dark:bg-white text-white dark:text-black" : "hover:bg-black/5 dark:hover:bg-white/20 hover:text-black dark:hover:text-white")}>
+            <a href={withBase(LINK.HREF)} class={cn("h-8 rounded-full px-3", textColor, "flex items-center justify-center", "transition-colors duration-300 ease-in-out", isActive(LINK.HREF) ? activePillBg : hoverBg)}>
               {LINK.TEXT}
             </a>
           ))
@@ -43,15 +64,9 @@ const isActive = (href: string) =>
     </div>
 
     <div class="buttons absolute right-0 top-1/2 -translate-y-1/2 flex gap-1">
-      <a href={withBase("/search")} aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("hidden md:flex", iconButton, isActive("/search") && "pointer-events-none bg-black dark:bg-white text-white dark:text-black")}>
+      <a href={withBase("/search")} aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("hidden md:flex", iconButton, isActive("/search") && cn("pointer-events-none", activePillBg))}>
         <svg class="size-full">
           <use href={`${withBase("/ui.svg")}#search`}></use>
-        </svg>
-      </a>
-
-      <a href={withBase("/rss.xml")} target="_blank" aria-label={`Rss feed for ${SITE.TITLE}`} class={cn("hidden md:flex", iconButton)}>
-        <svg class="size-full">
-          <use href={`${withBase("/ui.svg")}#rss`}></use>
         </svg>
       </a>
 

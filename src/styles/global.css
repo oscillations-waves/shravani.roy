@@ -32,11 +32,11 @@ html {
      the content scrolls past a constant gradient backdrop. */
   background: linear-gradient(
     to bottom,
-    #a8d8d0 0%,
-    #b8dfd8 20%,
-    #cfeae5 45%,
-    #ddf1ec 70%,
-    #e6f7f5 100%
+    #134e4a 0%,
+    #155e54 25%,
+    #1a7466 50%,
+    #228b7a 75%,
+    #2da38e 100%
   );
   background-attachment: fixed;
   font-family: "Atkinson", sans-serif;
@@ -50,7 +50,7 @@ html.dark {
 html,
 body {
   @apply h-full w-full antialiased;
-  @apply text-black/75 dark:text-white/75;
+  @apply text-neutral-800/75 dark:text-white/75;
 }
 
 body {
@@ -89,7 +89,7 @@ article {
 }
 
 .page-heading {
-  @apply font-semibold text-black dark:text-white;
+  @apply font-semibold text-neutral-800 dark:text-white;
 }
 
 .blend {

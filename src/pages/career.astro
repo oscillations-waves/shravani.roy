@@ -1,0 +1,104 @@
+---
+import { getCollection, render } from "astro:content";
+
+import PageLayout from "../layouts/PageLayout.astro";
+import TopLayout from "../layouts/TopLayout.astro";
+import BottomLayout from "../layouts/BottomLayout.astro";
+import { toValidDate } from "@/lib/utils";
+
+const formatWorkDate = (value: unknown): string => {
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+
+    if (
+      normalized === "present" ||
+      normalized === "current" ||
+      normalized === "now"
+    ) {
+      return "Present";
+    }
+
+    const parsed = new Date(value);
+
+    if (Number.isNaN(parsed.getTime())) {
+      return value;
+    }
+
+    return parsed.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+  }
+
+  return "";
+};
+
+const collection = (await getCollection("work")).sort(
+  (a, b) =>
+    toValidDate(b.data.dateStart, `${b.collection}/${b.id}.dateStart`).getTime() -
+    toValidDate(a.data.dateStart, `${a.collection}/${a.id}.dateStart`).getTime()
+);
+
+const work = await Promise.all(
+  collection.map(async (item) => {
+    const { Content } = await render(item);
+
+    return {
+      ...item,
+      Content,
+    };
+  })
+);
+---
+
+<PageLayout
+  title="Career"
+  description="Full career history of Shravani Roy."
+>
+  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
+    <TopLayout>
+      <div class="page-heading">Career</div>
+      <p class="mt-2 text-neutral-700/80 dark:text-white/70">
+        A complete view of the places I&rsquo;ve worked and the things
+        I&rsquo;ve built along the way.
+      </p>
+    </TopLayout>
+
+    <BottomLayout>
+      {work.length > 0 ? (
+        <ul>
+          {work.map(({ data, Content }) => (
+            <li class="mt-4 border-b border-black/10 py-8 first-of-type:mt-0 first-of-type:pt-0 last-of-type:border-none dark:border-white/25">
+              <div class="mb-4 text-sm uppercase text-neutral-800/60 dark:text-white/60">
+                {formatWorkDate(data.dateStart)} - {formatWorkDate(data.dateEnd)}
+              </div>
+
+              <div class="font-semibold text-neutral-800 dark:text-white">
+                {data.company}
+              </div>
+
+              <div class="text-sm font-semibold text-neutral-800/70 dark:text-white/70">
+                {data.role}
+              </div>
+
+              <article class="prose mt-4 dark:prose-invert">
+                <Content />
+              </article>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-neutral-800/70 dark:text-white/70">
+          No career entries found.
+        </p>
+      )}
+    </BottomLayout>
+  </div>
+</PageLayout>

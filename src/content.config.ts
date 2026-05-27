@@ -1,5 +1,6 @@
-import { defineCollection, z } from "astro:content"
+import { defineCollection } from "astro:content"
 import { glob } from "astro/loaders"
+import { z } from "astro/zod"
 
 const stripIndex = ({ entry }: { entry: string }) =>
   entry.replace(/\.(md|mdx)$/, "").replace(/\/index$/, "")

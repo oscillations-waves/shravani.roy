@@ -18,14 +18,14 @@ const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.id}.d
   href={href}
   class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 blend"
 >
-  <div class="w-full h-full group-hover:text-black group-hover:dark:text-white blend">
+  <div class="w-full h-full group-hover:text-neutral-800 group-hover:dark:text-white blend">
     <div class="flex flex-wrap gap-2">
       <div class="text-sm uppercase opacity-60">
         {dateLabel}
       </div>
     </div>
 
-    <div class="font-semibold mt-3 text-black dark:text-white">
+    <div class="font-semibold mt-3 text-neutral-800 dark:text-white">
       {entry.data.title}
     </div>
 

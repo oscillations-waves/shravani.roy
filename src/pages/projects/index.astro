@@ -18,9 +18,10 @@ const projects = (await getCollection("projects"))
 ---
 
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
+  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
   <TopLayout>
     <div>
-      <h1 class="mt-2 text-3xl font-semibold text-black dark:text-white">
+      <h1 class="mt-2 text-3xl font-semibold text-neutral-800 dark:text-white">
         {PROJECTS.TITLE}
       </h1>
 
@@ -41,10 +42,11 @@ const projects = (await getCollection("projects"))
           ))}
         </ul>
       ) : (
-        <p class="text-black/70 dark:text-white/70">
+        <p class="text-neutral-800/70 dark:text-white/70">
           No projects found.
         </p>
       )}
     </section>
   </BottomLayout>
+  </div>
 </PageLayout>
