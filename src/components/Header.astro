@@ -18,11 +18,11 @@ const onLightPage =
   pathname === withBase("/projects") ||
   pathname.startsWith(withBase("/projects/")) ||
   pathname === withBase("/ask")
-const textColor = onLightPage ? "text-neutral-800" : "text-white"
-const strokeColor = onLightPage ? "stroke-neutral-800" : "stroke-white"
-const borderColor = onLightPage ? "border-neutral-800/30" : "border-white/30"
-const hoverBg = onLightPage ? "hover:bg-neutral-800/10" : "hover:bg-white/10"
-const activePillBg = onLightPage ? "bg-neutral-800/15" : "bg-white/20"
+const textColor = onLightPage ? "text-neutral-800 dark:text-white" : "text-white"
+const strokeColor = onLightPage ? "stroke-neutral-800 dark:stroke-white" : "stroke-white"
+const borderColor = onLightPage ? "border-neutral-800/30 dark:border-white/30" : "border-white/30"
+const hoverBg = onLightPage ? "hover:bg-neutral-800/10 dark:hover:bg-white/10" : "hover:bg-white/10"
+const activePillBg = onLightPage ? "bg-neutral-800/15 dark:bg-white/20" : "bg-white/20"
 
 const iconButton = cn(
   "size-9 rounded-full p-2 items-center justify-center",
