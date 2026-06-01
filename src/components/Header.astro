@@ -16,7 +16,8 @@ const onLightPage =
   pathname === withBase("/career") ||
   pathname.startsWith(withBase("/career/")) ||
   pathname === withBase("/projects") ||
-  pathname.startsWith(withBase("/projects/"))
+  pathname.startsWith(withBase("/projects/")) ||
+  pathname === withBase("/ask")
 const textColor = onLightPage ? "text-neutral-800" : "text-white"
 const strokeColor = onLightPage ? "stroke-neutral-800" : "stroke-white"
 const borderColor = onLightPage ? "border-neutral-800/30" : "border-white/30"
