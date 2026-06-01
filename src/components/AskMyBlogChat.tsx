@@ -191,21 +191,21 @@ export default function AskMyBlogChat(props: Props) {
       {/* Input form */}
       <form
         onSubmit={submit}
-        class="sticky bottom-0 pt-3 pb-1 bg-white dark:bg-zinc-900"
+        class="sticky bottom-0 pt-3 pb-1 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md"
       >
-        <div class="flex items-center gap-2 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-2 shadow-sm focus-within:border-teal-400 dark:focus-within:border-teal-500 transition-colors">
+        <div class="flex items-center gap-3 rounded-2xl border-2 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 shadow-md focus-within:border-teal-500 dark:focus-within:border-teal-600 transition-all duration-200">
           <input
             type="text"
             value={input()}
             onInput={(e) => setInput(e.currentTarget.value)}
             placeholder='Ask anything about the blog…'
             disabled={loading()}
-            class="flex-1 bg-transparent text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 outline-none disabled:opacity-50"
+            class="flex-1 bg-transparent text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={loading() || !input().trim()}
-            class="shrink-0 rounded-xl bg-teal-600 dark:bg-teal-500 text-white px-4 py-1.5 text-sm font-medium hover:bg-teal-700 dark:hover:bg-teal-400 disabled:opacity-40 transition-colors"
+            class="shrink-0 rounded-xl bg-teal-800 dark:bg-teal-700 text-white px-5 py-1.5 text-sm font-semibold tracking-wide hover:bg-teal-900 dark:hover:bg-teal-600 disabled:opacity-40 transition-colors duration-200"
           >
             {loading() ? '…' : 'Ask'}
           </button>

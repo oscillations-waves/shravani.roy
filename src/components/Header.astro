@@ -56,7 +56,20 @@ const isActive = (href: string) =>
       <nav class="hidden md:flex items-center justify-center text-sm gap-1">
         {
           LINKS.map((LINK) => (
-            <a href={withBase(LINK.HREF)} class={cn("h-8 rounded-full px-3", textColor, "flex items-center justify-center", "transition-colors duration-300 ease-in-out", isActive(LINK.HREF) ? activePillBg : hoverBg)}>
+            <a
+              href={withBase(LINK.HREF)}
+              class={cn(
+                "h-8 rounded-full px-3 flex items-center justify-center transition-colors duration-300 ease-in-out",
+                textColor,
+                isActive(LINK.HREF)
+                  ? onLightPage
+                    ? "bg-neutral-800/20 dark:bg-white/30"
+                    : "bg-white/30"
+                  : onLightPage
+                    ? "hover:bg-neutral-800/10 dark:hover:bg-white/15"
+                    : "hover:bg-white/15"
+              )}
+            >
               {LINK.TEXT}
             </a>
           ))
