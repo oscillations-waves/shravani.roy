@@ -191,23 +191,25 @@ export default function AskMyBlogChat(props: Props) {
       {/* Input form */}
       <form
         onSubmit={submit}
-        class="flex gap-2 sticky bottom-0 bg-white dark:bg-zinc-900 pt-2"
+        class="sticky bottom-0 pt-3 pb-1 bg-white dark:bg-zinc-900"
       >
-        <input
-          type="text"
-          value={input()}
-          onInput={(e) => setInput(e.currentTarget.value)}
-          placeholder='e.g. "What did you write about Ruby variables?"'
-          disabled={loading()}
-          class="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-2.5 text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 outline-none focus:border-zinc-400 dark:focus:border-zinc-500 disabled:opacity-50"
-        />
-        <button
-          type="submit"
-          disabled={loading() || !input().trim()}
-          class="rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2.5 text-sm font-medium hover:bg-zinc-700 dark:hover:bg-zinc-300 disabled:opacity-40 transition-colors"
-        >
-          {loading() ? '…' : 'Ask'}
-        </button>
+        <div class="flex items-center gap-2 rounded-2xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-2 shadow-sm focus-within:border-teal-400 dark:focus-within:border-teal-500 transition-colors">
+          <input
+            type="text"
+            value={input()}
+            onInput={(e) => setInput(e.currentTarget.value)}
+            placeholder='Ask anything about the blog…'
+            disabled={loading()}
+            class="flex-1 bg-transparent text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 outline-none disabled:opacity-50"
+          />
+          <button
+            type="submit"
+            disabled={loading() || !input().trim()}
+            class="shrink-0 rounded-xl bg-teal-600 dark:bg-teal-500 text-white px-4 py-1.5 text-sm font-medium hover:bg-teal-700 dark:hover:bg-teal-400 disabled:opacity-40 transition-colors"
+          >
+            {loading() ? '…' : 'Ask'}
+          </button>
+        </div>
       </form>
     </div>
   );
