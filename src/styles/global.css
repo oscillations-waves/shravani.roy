@@ -32,11 +32,11 @@ html {
      the content scrolls past a constant gradient backdrop. */
   background: linear-gradient(
     to bottom,
-    #2a9d8f 0%,
-    #35b5a5 25%,
-    #3ec9b8 50%,
-    #4dd9c7 75%,
-    #62e8d5 100%
+    #b2e8e2 0%,
+    #c4eeea 25%,
+    #d4f3f0 50%,
+    #e2f8f6 75%,
+    #edfaf9 100%
   );
   background-attachment: fixed;
   font-family: "Atkinson", sans-serif;
