@@ -17,10 +17,10 @@ export const GET: APIRoute = async () => {
     "/work/",
     "/blog/",
     "/projects/",
-    ...posts.filter((post) => !post.data.draft).map((post) => `/blog/${post.slug}/`),
+    ...posts.filter((post) => !post.data.draft).map((post) => `/blog/${post.id}/`),
     ...projects
       .filter((project) => !project.data.draft)
-      .map((project) => `/projects/${project.slug}/`),
+      .map((project) => `/projects/${project.id}/`),
   ];
 
   const urls = pages
