@@ -50,13 +50,10 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer {
-    --footer-paper: #faf7ee;
-    --footer-muted: #c4dcd4;
-    --footer-teal: #113d37;
-    --footer-mark: rgb(196 220 212 / 14%);
+    --footer-mark: color-mix(in srgb, var(--site-inverse-muted) 14%, transparent);
 
     flex: none;
-    background-color: var(--footer-teal);
+    background-color: var(--site-inverse-bg);
     background-image: radial-gradient(
       circle at 88% 2.75rem,
       transparent 38px, var(--footer-mark) 39px 40px,
@@ -66,7 +63,7 @@ const year = new Date().getFullYear();
       transparent 86px 98px, var(--footer-mark) 99px 100px,
       transparent 101px
     );
-    color: var(--footer-paper);
+    color: var(--site-inverse-ink);
   }
 
   .footer-inner {
@@ -91,7 +88,7 @@ const year = new Date().getFullYear();
   p {
     max-width: 29rem;
     margin-block: 0.8rem 1.35rem;
-    color: var(--footer-muted);
+    color: var(--site-inverse-muted);
     font-size: 1.0625rem;
   }
 
@@ -111,7 +108,7 @@ const year = new Date().getFullYear();
     gap: 0.4em;
     min-height: 1.5rem;
     text-decoration: underline;
-    text-decoration-color: rgb(196 220 212 / 55%);
+    text-decoration-color: color-mix(in srgb, var(--site-inverse-muted) 55%, transparent);
     text-underline-offset: 0.25em;
   }
 
@@ -120,7 +117,7 @@ const year = new Date().getFullYear();
   }
 
   a:focus-visible {
-    outline: 2px solid var(--footer-paper);
+    outline: 2px solid var(--site-inverse-ink);
     outline-offset: 4px;
   }
 
@@ -128,15 +125,15 @@ const year = new Date().getFullYear();
     min-height: 2.75rem;
     padding: 0.5rem 0.9rem;
     border-radius: 0.25rem;
-    background: var(--footer-paper);
-    color: var(--footer-teal);
+    background: var(--site-inverse-ink);
+    color: var(--site-inverse-bg);
     font-weight: 700;
     text-decoration: none;
     overflow-wrap: anywhere;
   }
 
   .email-link:hover {
-    background: var(--footer-muted);
+    background: var(--site-inverse-muted);
   }
 
   .profiles ul {
@@ -145,13 +142,13 @@ const year = new Date().getFullYear();
 
   .profiles span,
   .footer-bottom {
-    color: var(--footer-muted);
+    color: var(--site-inverse-muted);
   }
 
   .footer-bottom {
     justify-content: space-between;
     padding-block: 0.95rem;
-    border-top: 1px solid rgb(196 220 212 / 30%);
+    border-top: 1px solid color-mix(in srgb, var(--site-inverse-muted) 30%, transparent);
     font-size: 0.875rem;
   }
 
@@ -160,7 +157,7 @@ const year = new Date().getFullYear();
   }
 
   .back-to-top {
-    color: var(--footer-paper);
+    color: var(--site-inverse-ink);
   }
 
   @media (min-width: 48rem) {

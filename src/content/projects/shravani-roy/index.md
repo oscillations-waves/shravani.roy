@@ -17,6 +17,6 @@ I built this site as a place to share what I’m building, write about what I le
 ## How it’s built
 
 - **Astro and Markdown** generate the article and project pages from content collections. Posts can be found through keyword search, topic filters, and the RSS feed.
-- **TypeScript and Tailwind CSS** support the shared page layouts and the cream and teal theme, with matching light and dark modes.
+- **TypeScript and Tailwind CSS** support the shared page layouts and the blue and apricot palette, with matching light and dark modes.
 - **SolidJS** powers the interactive chat on the Ask page, which answers questions about my writing and links to the source posts.
 - **GitHub Actions** checks and builds the site before deploying it to GitHub Pages.
