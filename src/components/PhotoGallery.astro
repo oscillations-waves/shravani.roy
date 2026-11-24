@@ -1,0 +1,120 @@
+---
+import { getImage, Image } from "astro:assets";
+import PhotoViewer from "@components/PhotoViewer.astro";
+import { photographs } from "@/data/photography";
+
+interface Props {
+  viewerId: string;
+  compact?: boolean;
+}
+
+const { viewerId, compact = false } = Astro.props;
+const thumbnailWidth = compact ? 160 : 640;
+const thumbnailWidths = compact ? [160, 320] : [320, 640, 960];
+const thumbnailSizes = compact
+  ? "(min-width: 64rem) 6rem, (min-width: 42rem) 10vw, 20vw"
+  : "(min-width: 64rem) 20rem, (min-width: 53rem) 33vw, (min-width: 36rem) 50vw, 100vw";
+const wideThumbnailSizes = "(min-width: 64rem) 41rem, (min-width: 53rem) 66vw, 100vw";
+
+const viewerPhotos = await Promise.all(photographs.map(async ({ image, alt, caption }) => {
+  const scale = Math.min(1, 1000 / image.width, 1450 / image.height);
+  const width = Math.round(scale * image.width);
+  const height = Math.round(scale * image.height);
+  const { src } = await getImage({ src: image, width, height, format: "webp" });
+
+  return { src, width, height, alt, caption };
+}));
+---
+
+{photographs.length > 0 && (
+  <>
+    <ul class:list={["photo-grid", { "photo-grid-compact": compact }]} role="list">
+      {photographs.map(({ image, alt, caption }, index) => {
+        const wide = !compact && image.width > image.height;
+        return (
+          <li class:list={{ "photo-wide": wide }}>
+            <figure>
+              <button
+                type="button"
+                data-photo-index={index}
+                aria-controls={viewerId}
+                aria-haspopup="dialog"
+                aria-label={`View photo: ${alt}`}
+              >
+                <Image
+                  src={image}
+                  alt={alt}
+                  width={Math.min(thumbnailWidth, image.width)}
+                  widths={thumbnailWidths.filter((width) => width <= image.width)}
+                  sizes={wide ? wideThumbnailSizes : thumbnailSizes}
+                  format="webp"
+                  loading="lazy"
+                />
+              </button>
+              {!compact && <figcaption>{caption}</figcaption>}
+            </figure>
+          </li>
+        );
+      })}
+    </ul>
+    <PhotoViewer id={viewerId} label="Gallery photos" photos={viewerPhotos} />
+  </>
+)}
+
+<style>
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    align-items: start;
+    gap: 1.25rem;
+  }
+
+  .photo-grid-compact {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.35rem, 1vw, 0.65rem);
+    margin-top: 1.5rem;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: var(--site-wash);
+    cursor: zoom-in;
+  }
+
+  .photo-wide button {
+    aspect-ratio: 3 / 2;
+  }
+
+  .photo-grid-compact button {
+    aspect-ratio: 1;
+    border-radius: 0.25rem;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 2px;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  figcaption {
+    margin-top: 0.5rem;
+    color: var(--site-muted);
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 36rem) {
+    .photo-wide {
+      grid-column: span 2;
+    }
+  }
+</style>

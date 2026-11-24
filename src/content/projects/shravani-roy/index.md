@@ -1,6 +1,6 @@
 ---
 title: "shravani.roy"
-summary: "My personal blog and engineering portfolio, built with Astro. It brings together my technical writing, projects, and photography."
+summary: "My personal blog and engineering portfolio, built with Astro. It brings together my technical writing, projects, and glimpses of the world through my lens."
 date: "November 24 2026"
 tags:
   - astro
@@ -12,7 +12,7 @@ demoUrl: "https://oscillations-waves.github.io/shravani.roy/"
 repoUrl: "https://github.com/oscillations-waves/shravani.roy"
 ---
 
-I built this site as a place to share what I’m building, write about what I learn, and make room for photography.
+I built this site as a place to share what I’m building, write about what I learn, and hold on to moments I might otherwise walk past.
 
 ## How it’s built
 

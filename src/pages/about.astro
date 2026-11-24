@@ -1,10 +1,13 @@
 ---
 import Portrait from "@components/Portrait.astro";
-import AboutPhotoViewer from "@components/AboutPhotoViewer.astro";
+import PhotoGallery from "@components/PhotoGallery.astro";
+import PhotoViewer from "@components/PhotoViewer.astro";
 import PageLayout from "@/layouts/PageLayout.astro";
 import { SITE, SOCIALS } from "@/consts";
 import { aboutPhotos } from "@/data/portraits";
 import { withBase } from "@/lib/utils";
+
+const portraits = aboutPhotos.map((photo) => ({ ...photo, src: withBase(photo.src) }));
 ---
 
 <PageLayout
@@ -25,9 +28,9 @@ import { withBase } from "@/lib/utils";
             >N-able</a>
           </p>
           <p class="intro-copy">
-            I build backend services for identity and access management. I like
-            working through the details of who should have access to what and
-            following a request through the services that make that decision.
+            I build backend systems and like figuring out how to make them
+            easier to run and maintain. My interests span distributed systems,
+            cloud-native infrastructure, and practical applications of AI.
           </p>
         </div>
         <Portrait photo={aboutPhotos[0]} viewerIndex={0} />
@@ -45,7 +48,7 @@ import { withBase } from "@/lib/utils";
           </p>
           <p>
             I earned a B.Tech in Computer Science from Netaji Subhash
-            Engineering College and completed machine learning coursework in 2025.
+            Engineering College in 2019.
           </p>
           <div class="section-links">
             <a class="text-link" href={withBase("/career")}>
@@ -70,9 +73,7 @@ import { withBase } from "@/lib/utils";
               Browse my photos <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
-          <div class="about-secondary-portrait">
-            <Portrait photo={aboutPhotos[1]} viewerIndex={1} loading="lazy" />
-          </div>
+          <PhotoGallery viewerId="about-gallery-viewer" compact />
         </section>
       </div>
 
@@ -98,7 +99,7 @@ import { withBase } from "@/lib/utils";
       </section>
     </div>
   </div>
-  <AboutPhotoViewer photos={aboutPhotos} />
+  <PhotoViewer id="about-photo-dialog" label="Portraits of Shravani" photos={portraits} />
 </PageLayout>
 
 <style>
@@ -124,6 +125,10 @@ import { withBase } from "@/lib/utils";
   h2 {
     font-family: var(--site-heading-font);
     font-weight: 400;
+  }
+
+  #interests-title {
+    scroll-margin-top: 5rem;
   }
 
   h1 {
@@ -176,11 +181,6 @@ import { withBase } from "@/lib/utils";
     flex-wrap: wrap;
     gap: 0.5rem 1.4rem;
     margin-top: 1.15rem;
-  }
-
-  .about-secondary-portrait {
-    display: grid;
-    margin-top: 2.5rem;
   }
 
   .text-link {

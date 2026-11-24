@@ -1,15 +1,22 @@
 ---
-import type { PortraitPhoto } from "@/data/portraits";
 import { withBase } from "@/lib/utils";
 
 interface Props {
-  photos: readonly PortraitPhoto[];
+  id: string;
+  label: string;
+  photos: readonly {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    caption: string;
+  }[];
 }
 
-const { photos } = Astro.props;
+const { id, label, photos } = Astro.props;
 ---
 
-<dialog id="about-photo-dialog" class="photo-viewer" aria-label="About photos">
+<dialog id={id} class="photo-viewer" aria-label={label} data-photo-viewer>
   <button class="photo-viewer-close" type="button" data-photo-close>
     <svg aria-hidden="true" width="18" height="18" stroke="currentColor">
       <use href={`${withBase("/ui.svg")}#x`} />
@@ -20,10 +27,11 @@ const { photos } = Astro.props;
   <div class="photo-viewer-stage">
     {photos.map((photo, index) => (
       <img
-        src={withBase(photo.src)}
+        src={photo.src}
         alt={photo.alt}
         width={photo.width}
         height={photo.height}
+        loading="lazy"
         hidden={index !== 0}
         data-photo-slide
         data-caption={photo.caption}
@@ -42,12 +50,12 @@ const { photos } = Astro.props;
 </dialog>
 
 <script>
-  const dialog = document.querySelector<HTMLDialogElement>("#about-photo-dialog");
-  const slides = dialog?.querySelectorAll<HTMLImageElement>("[data-photo-slide]");
-  const count = dialog?.querySelector("[data-photo-count]");
-  const caption = dialog?.querySelector("[data-photo-caption]");
+  document.querySelectorAll<HTMLDialogElement>("[data-photo-viewer]").forEach((dialog) => {
+    const slides = dialog.querySelectorAll<HTMLImageElement>("[data-photo-slide]");
+    const count = dialog.querySelector("[data-photo-count]");
+    const caption = dialog.querySelector("[data-photo-caption]");
+    if (!slides.length || !count || !caption) return;
 
-  if (dialog && slides?.length && count && caption) {
     let activeIndex = 0;
     let opener: HTMLButtonElement | undefined;
     let backdropPressed = false;
@@ -67,9 +75,12 @@ const { photos } = Astro.props;
       return event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom;
     };
 
-    document.querySelectorAll<HTMLButtonElement>("[data-about-photo]").forEach((trigger) => {
+    const triggers = document.querySelectorAll<HTMLButtonElement>(
+      `[data-photo-index][aria-controls="${CSS.escape(dialog.id)}"]`,
+    );
+    triggers.forEach((trigger) => {
       trigger.addEventListener("click", () => {
-        const index = Number(trigger.dataset.aboutPhoto);
+        const index = Number(trigger.dataset.photoIndex);
         if (dialog.open || !slides[index]) return;
         opener = trigger;
         showPhoto(index);
@@ -99,7 +110,7 @@ const { photos } = Astro.props;
       opener?.focus({ preventScroll: true });
       opener = undefined;
     });
-  }
+  });
 </script>
 
 <style>

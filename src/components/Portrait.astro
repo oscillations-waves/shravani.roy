@@ -25,7 +25,7 @@ const { photo = streetPortrait, viewerIndex, loading = "eager" } = Astro.props;
       <button
         class="portrait-open"
         type="button"
-        data-about-photo={viewerIndex}
+        data-photo-index={viewerIndex}
         aria-label={`View photo of ${photo.alt}`}
         aria-haspopup="dialog"
         aria-controls="about-photo-dialog"
