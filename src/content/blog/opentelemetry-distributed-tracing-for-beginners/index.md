@@ -4,6 +4,7 @@ summary: "Learn why distributed tracing matters, how OpenTelemetry models a requ
 date: "September 15 2026"
 draft: false
 tags:
+- technology
 - observability
 - opentelemetry
 - distributed-tracing
@@ -54,14 +55,53 @@ Every trace has a trace ID. Think of it as the case number for one request.
 
 A **span** is one operation within that trace: handling an HTTP request, calling another service, querying a database, or publishing a queue message. Spans have a name, start and end times, a status, attributes, and usually a parent span.
 
-```text
-Trace: 7f2a...
-└── POST /checkout                  5.0s
-    ├── validate cart                80ms
-    ├── POST payment service        3.7s
-    │   └── charge card              3.5s
-    └── GET inventory service       220ms
-```
+<figure class="article-diagram not-prose" aria-labelledby="checkout-trace-caption">
+  <figcaption class="article-diagram__caption" id="checkout-trace-caption">
+    <span>Trace <code>7f2a...</code></span>
+    <span class="article-diagram__caption-detail">Span duration</span>
+  </figcaption>
+  <ul class="article-diagram__trace" role="list">
+    <li>
+      <div class="article-diagram__span">
+        <span class="article-diagram__span-name">POST /checkout</span>
+        <span class="article-diagram__bar" style="--span-duration: 100%" aria-hidden="true"></span>
+        <time datetime="PT5S">5.0s</time>
+      </div>
+      <ul class="article-diagram__children" role="list">
+        <li>
+          <div class="article-diagram__span">
+            <span class="article-diagram__span-name">validate cart</span>
+            <span class="article-diagram__bar" style="--span-duration: 1.6%" aria-hidden="true"></span>
+            <time datetime="PT0.08S">80ms</time>
+          </div>
+        </li>
+        <li>
+          <div class="article-diagram__span">
+            <span class="article-diagram__span-name">POST payment service</span>
+            <span class="article-diagram__bar" style="--span-duration: 74%" aria-hidden="true"></span>
+            <time datetime="PT3.7S">3.7s</time>
+          </div>
+          <ul class="article-diagram__children" role="list">
+            <li>
+              <div class="article-diagram__span">
+                <span class="article-diagram__span-name">charge card</span>
+                <span class="article-diagram__bar" style="--span-duration: 70%" aria-hidden="true"></span>
+                <time datetime="PT3.5S">3.5s</time>
+              </div>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div class="article-diagram__span">
+            <span class="article-diagram__span-name">GET inventory service</span>
+            <span class="article-diagram__bar" style="--span-duration: 4.4%" aria-hidden="true"></span>
+            <time datetime="PT0.22S">220ms</time>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</figure>
 
 This hierarchy makes the bottleneck visible immediately: the payment call dominates the checkout time. The [OpenTelemetry tracing concepts](https://opentelemetry.io/docs/concepts/signals/traces/) describe spans as the building blocks of a trace.
 

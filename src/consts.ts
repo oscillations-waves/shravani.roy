@@ -3,6 +3,7 @@ import type { Site, Page, Links, Socials } from "@/types"
 // Global
 export const SITE: Site = {
   TITLE: "Shravani Roy",
+  SHORT_NAME: "shravani",
   DESCRIPTION: "Software engineer.",
   AUTHOR: "Shravani Roy",
 }
@@ -16,7 +17,7 @@ export const WORK: Page = {
 // Blog Page
 export const BLOG: Page = {
   TITLE: "Blog",
-  DESCRIPTION: "Writing on topics I am passionate about.",
+  DESCRIPTION: "Technical guides, notes on what I’m learning, and the occasional book review.",
 }
 
 // Projects Page 
@@ -37,17 +38,21 @@ export const LINKS: Links = [
     TEXT: "Home", 
     HREF: "/", 
   },
-  { 
-    TEXT: "About", 
-    HREF: "/about", 
+  {
+    TEXT: "Projects",
+    HREF: "/projects",
   },
   { 
     TEXT: "Blog", 
     HREF: "/blog", 
   },
-  { 
-    TEXT: "Projects", 
-    HREF: "/projects", 
+  {
+    TEXT: "Gallery",
+    HREF: "/#gallery",
+  },
+  {
+    TEXT: "About",
+    HREF: "/about",
   },
   {
     TEXT: "Ask",

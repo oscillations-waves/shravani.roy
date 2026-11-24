@@ -4,6 +4,7 @@ export type Page = {
 }
 
 export interface Site extends Page {
+  SHORT_NAME: string
   AUTHOR: string
 }
 

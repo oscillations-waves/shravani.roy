@@ -62,43 +62,41 @@ const work = await Promise.all(
   title="Career"
   description="Full career history of Shravani Roy."
 >
-  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
-    <TopLayout>
-      <div class="page-heading">Career</div>
-      <p class="mt-2 text-neutral-700/80 dark:text-white/70">
-        A complete view of the places I&rsquo;ve worked and the things
-        I&rsquo;ve built along the way.
+  <TopLayout>
+    <h1 class="page-heading">Career</h1>
+    <p class="page-summary">
+      A complete view of the places I&rsquo;ve worked and the things
+      I&rsquo;ve built along the way.
+    </p>
+  </TopLayout>
+
+  <BottomLayout>
+    {work.length > 0 ? (
+      <ul class="divide-y divide-[color:var(--site-rule)]">
+        {work.map(({ data, Content }) => (
+          <li class="py-7 first:pt-0 sm:py-9">
+            <p class="mb-2 text-xs font-bold uppercase tracking-widest text-[color:var(--site-accent)]">
+              {formatWorkDate(data.dateStart)} – {formatWorkDate(data.dateEnd)}
+            </p>
+
+            <h2 class="font-[family-name:var(--site-heading-font)] text-2xl text-[color:var(--site-ink)] sm:text-3xl">
+              {data.company}
+            </h2>
+
+            <p class="mt-1 text-sm font-bold text-[color:var(--site-muted)]">
+              {data.role}
+            </p>
+
+            <article class="mt-4 pb-0">
+              <Content />
+            </article>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-[color:var(--site-muted)]">
+        No career entries found.
       </p>
-    </TopLayout>
-
-    <BottomLayout>
-      {work.length > 0 ? (
-        <ul>
-          {work.map(({ data, Content }) => (
-            <li class="mt-4 border-b border-black/10 py-8 first-of-type:mt-0 first-of-type:pt-0 last-of-type:border-none dark:border-white/25">
-              <div class="mb-4 text-sm uppercase text-neutral-800/60 dark:text-white/60">
-                {formatWorkDate(data.dateStart)} - {formatWorkDate(data.dateEnd)}
-              </div>
-
-              <div class="font-semibold text-neutral-800 dark:text-white">
-                {data.company}
-              </div>
-
-              <div class="text-sm font-semibold text-neutral-800/70 dark:text-white/70">
-                {data.role}
-              </div>
-
-              <article class="prose mt-4 dark:prose-invert">
-                <Content />
-              </article>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p class="text-neutral-800/70 dark:text-white/70">
-          No career entries found.
-        </p>
-      )}
-    </BottomLayout>
-  </div>
+    )}
+  </BottomLayout>
 </PageLayout>

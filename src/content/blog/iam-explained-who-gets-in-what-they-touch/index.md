@@ -4,6 +4,7 @@ summary: "A practical introduction to identity and access management: proving wh
 date: "November 24 2026"
 draft: false
 tags:
+- technology
 - security
 - iam
 - cloud

@@ -1,41 +1,44 @@
 ---
-import { SITE, LINKS } from "@/consts"
-import { cn, withBase } from "../lib/utils"
-const { pathname } = Astro.url
-const subpath = pathname.match(/[^/]+/g)
+import { LINKS } from "@/consts"
+import { withBase } from "../lib/utils"
+
+const pathname = Astro.url.pathname.replace(/\/$/, "")
+
+function getCurrent(href: string): "page" | "location" | undefined {
+  if (href.includes("#")) return
+  const destination = withBase(href).replace(/\/$/, "")
+  if (pathname === destination) return "page"
+  if (href !== "/" && pathname.startsWith(destination + "/")) return "location"
+}
 ---
 
-<div id="drawer" class="fixed inset-0 h-0 z-40 overflow-hidden flex flex-col items-center justify-center md:hidden bg-neutral-100 dark:bg-neutral-900 transition-[height] duration-300 ease-in-out">
-  <nav class="flex flex-col items-center space-y-2">
-    {
-      LINKS.map((LINK) => (
-        <a href={withBase(LINK.HREF)} class={cn("flex items-center justify-center px-3 py-1 rounded-full", "text-current hover:text-neutral-800 dark:hover:text-white", "hover:bg-black/5 dark:hover:bg-white/20", "transition-colors duration-300 ease-in-out", pathname === withBase(LINK.HREF) || "/" + subpath?.[0] === LINK.HREF ? "pointer-events-none bg-black dark:bg-white text-white dark:text-neutral-800" : "")}>
-          {LINK.TEXT}
-        </a>
-      ))
-    }
+<div id="drawer" inert class="fixed inset-x-0 top-16 z-40 overflow-y-auto px-5 py-3 motion-safe:transition-[opacity,transform,visibility] md:hidden">
+  <nav aria-label="Primary">
+    <ul role="list">
+      {LINKS.map((LINK) => (
+        <li>
+          <a href={withBase(LINK.HREF)} aria-current={getCurrent(LINK.HREF)} class="site-nav-link flex min-h-11 items-center py-2">
+            {LINK.TEXT}
+          </a>
+        </li>
+      ))}
+    </ul>
   </nav>
-
-  <div class="flex gap-1 mt-5">
-    <a href={withBase("/search")} aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("size-9 rounded-full p-2 items-center justify-center bg-transparent hover:bg-black/5 dark:hover:bg-white/20 stroke-current hover:stroke-black hover:dark:stroke-white border border-black/10 dark:border-white/25 transition-colors duration-300 ease-in-out", pathname === withBase("/search") || "/" + subpath?.[0] === "search" ? "pointer-events-none bg-black dark:bg-white text-white dark:text-neutral-800" : "")}>
-      <svg class="size-full">
-        <use href={`${withBase("/ui.svg")}#search`}></use>
-      </svg>
-    </a>
-
-    <button id="drawer-theme-button" aria-label={`Toggle light and dark theme`} class="size-9 rounded-full p-2 items-center justify-center bg-transparent hover:bg-black/5 dark:hover:bg-white/20 stroke-current hover:stroke-black hover:dark:stroke-white border border-black/10 dark:border-white/25 transition-colors duration-300 ease-in-out">
-      <svg class="block dark:hidden size-full">
-        <use href={`${withBase("/ui.svg")}#sun`}></use>
-      </svg>
-      <svg class="hidden dark:block size-full">
-        <use href={`${withBase("/ui.svg")}#moon`}></use>
-      </svg>
-    </button>
-  </div>
 </div>
 
 <style>
-  #drawer.open {
-    @apply h-full;
+  #drawer {
+    max-height: calc(100dvh - 4rem);
+    border-bottom: 1px solid var(--site-rule);
+  }
+
+  #drawer[inert] {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  li + li {
+    border-top: 1px solid var(--site-rule);
   }
 </style>

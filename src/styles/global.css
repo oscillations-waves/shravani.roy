@@ -4,6 +4,29 @@
 
 :root {
   --copy-btn-margin: 10px;
+  --site-paper: #faf7ee;
+  --site-surface: #fffdf7;
+  --site-ink: #222e27;
+  --site-muted: #4d5d53;
+  --site-accent: #12645d;
+  --site-rule: #d4d9cc;
+  --site-control: #63776b;
+  --site-wash: #e0f1ee;
+  --site-active: #d8eadf;
+  --site-heading-font: Georgia, "Times New Roman", serif;
+}
+
+html.dark {
+  --site-paper: #141c18;
+  --site-surface: #19241f;
+  --site-ink: #f4f0e5;
+  --site-muted: #bac8bc;
+  --site-accent: #a3ddce;
+  --site-rule: #46534b;
+  --site-control: #83988c;
+  --site-wash: #1b3532;
+  --site-active: #344b3d;
+  color-scheme: dark;
 }
 
 @layer base {
@@ -27,69 +50,75 @@
 html {
   overflow-y: scroll;
   color-scheme: light;
-  /* The teal gradient lives on <html> so it covers the entire scrollable
-     area. `background-attachment: fixed` pins it to the viewport so only
-     the content scrolls past a constant gradient backdrop. */
-  background: linear-gradient(
-    to bottom,
-    #b2e8e2 0%,
-    #c4eeea 25%,
-    #d4f3f0 50%,
-    #e2f8f6 75%,
-    #edfaf9 100%
-  );
-  background-attachment: fixed;
+  background: var(--site-paper);
+  color: var(--site-ink);
   font-family: "Atkinson", sans-serif;
-}
-
-html.dark {
-  color-scheme: dark;
-  background: #000;
 }
 
 html,
 body {
   @apply h-full w-full antialiased;
-  @apply text-neutral-800/75 dark:text-white/75;
 }
 
 body {
   @apply relative flex flex-col;
-  /* Transparent so the html gradient shows through. */
-  background: transparent;
   min-height: 100vh;
 }
 
-html.dark body {
-  background: #000;
-}
-
 main {
-  /* Transparent so the body gradient shows through. */
-  @apply flex flex-col flex-1 bg-transparent dark:bg-black;
+  @apply flex flex-col flex-1;
 }
 
-header {
-  @apply border-b;
-  @apply transition-all duration-300 ease-in-out;
-}
-
-header:not(.scrolled) {
-  @apply bg-transparent border-transparent;
-}
-
-header.scrolled {
-  @apply bg-[#a8d8d0]/75 dark:bg-black/50;
-  @apply border-black/10 dark:border-white/25;
-  @apply backdrop-blur-sm saturate-200;
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--site-accent);
+  outline-offset: 3px;
 }
 
 article {
-  @apply prose dark:prose-invert max-w-full pb-12;
+  @apply prose max-w-full pb-12;
+}
+
+article,
+.site-prose {
+  --tw-prose-body: var(--site-ink);
+  --tw-prose-headings: var(--site-ink);
+  --tw-prose-lead: var(--site-muted);
+  --tw-prose-links: var(--site-accent);
+  --tw-prose-bold: var(--site-ink);
+  --tw-prose-counters: var(--site-muted);
+  --tw-prose-bullets: var(--site-accent);
+  --tw-prose-hr: var(--site-rule);
+  --tw-prose-quotes: var(--site-ink);
+  --tw-prose-quote-borders: var(--site-accent);
+  --tw-prose-captions: var(--site-muted);
+  --tw-prose-kbd: var(--site-ink);
+  --tw-prose-code: var(--site-accent);
+  --tw-prose-pre-code: #e6f4ec;
+  --tw-prose-pre-bg: #193c35;
+  --tw-prose-th-borders: var(--site-control);
+  --tw-prose-td-borders: var(--site-rule);
+}
+
+article :where(h2, h3, h4) {
+  font-family: var(--site-heading-font);
+  letter-spacing: -0.025em;
 }
 
 .page-heading {
-  @apply font-semibold text-neutral-800 dark:text-white;
+  color: var(--site-ink);
+  font-family: var(--site-heading-font);
+  font-size: clamp(2.5rem, 5.8vw, 4.25rem);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 1.07;
+}
+
+.page-summary {
+  max-width: 60ch;
+  margin-top: 0.75rem;
+  color: var(--site-muted);
+  font-size: 1.0625rem;
+  line-height: 1.55;
 }
 
 .blend {

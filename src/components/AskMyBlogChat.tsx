@@ -105,7 +105,7 @@ export default function AskMyBlogChat(props: Props) {
           }
         }
       }
-    } catch (err) {
+    } catch {
       setMessages((prev) => {
         const msgs = [...prev];
         const last = msgs[msgs.length - 1];
@@ -124,88 +124,84 @@ export default function AskMyBlogChat(props: Props) {
   }
 
   return (
-    <div class="flex flex-col gap-4 w-full max-w-2xl mx-auto">
+    <div class="flex w-full flex-col gap-4">
       {/* Message list */}
-      <div class="flex flex-col gap-4 min-h-[200px]">
-        <Show when={messages().length === 0}>
-          <div class="text-center text-zinc-400 dark:text-zinc-500 py-12 text-sm">
-            Ask anything about the blog — topics, posts, ideas.
-          </div>
-        </Show>
-
-        <For each={messages()}>
-          {(msg) => (
-            <div
-              class={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+      <Show when={messages().length > 0}>
+        <div class="flex flex-col gap-4">
+          <For each={messages()}>
+            {(msg) => (
               <div
-                class={`rounded-2xl px-4 py-3 max-w-[85%] text-sm leading-relaxed ${
-                  msg.role === 'user'
-                    ? 'bg-zinc-800 dark:bg-zinc-700 text-white rounded-br-sm'
-                    : msg.error
-                      ? 'bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 rounded-bl-sm'
-                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 rounded-bl-sm'
-                }`}
+                class={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <Show when={msg.role === 'user'}>
-                  <p>{msg.content}</p>
-                </Show>
-
-                <Show when={msg.role === 'assistant'}>
-                  <Show
-                    when={msg.content}
-                    fallback={
-                      <span class="animate-pulse text-zinc-400">Thinking…</span>
-                    }
-                  >
-                    {/* eslint-disable-next-line solid/no-innerhtml */}
-                    <div
-                      class="prose prose-sm dark:prose-invert max-w-none"
-                      innerHTML={marked.parse(msg.content) as string}
-                    />
+                <div
+                  class={`min-w-0 max-w-full rounded-2xl border px-4 py-3 text-sm leading-relaxed [overflow-wrap:anywhere] sm:max-w-[85%] ${
+                    msg.role === 'user'
+                      ? 'rounded-br-sm border-[color:var(--site-rule)] bg-[color:var(--site-wash)] text-[color:var(--site-ink)]'
+                      : msg.error
+                        ? 'rounded-bl-sm border-red-200 bg-red-50 text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300'
+                        : 'rounded-bl-sm border-[color:var(--site-rule)] bg-[color:var(--site-surface)] text-[color:var(--site-ink)]'
+                  }`}
+                >
+                  <Show when={msg.role === 'user'}>
+                    <p>{msg.content}</p>
                   </Show>
 
-                  <Show when={(msg.sources?.length ?? 0) > 0}>
-                    <div class="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700 flex flex-wrap gap-2">
-                      <For each={msg.sources}>
-                        {(slug) => (
-                          <a
-                            href={`${BLOG_BASE}${slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="inline-flex items-center gap-1 text-xs bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300 px-2 py-1 rounded-full hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
-                          >
-                            📄 {slug}
-                          </a>
-                        )}
-                      </For>
-                    </div>
+                  <Show when={msg.role === 'assistant'}>
+                    <Show
+                      when={msg.content}
+                      fallback={
+                        <span class="text-[color:var(--site-muted)] motion-safe:animate-pulse">Thinking…</span>
+                      }
+                    >
+                      <div
+                        class={`prose prose-sm max-w-none ${msg.error ? 'text-inherit' : 'site-prose'}`}
+                        innerHTML={marked.parse(msg.content) as string}
+                      />
+                    </Show>
+
+                    <Show when={(msg.sources?.length ?? 0) > 0}>
+                      <div class="mt-3 flex flex-wrap gap-2 border-t border-[color:var(--site-rule)] pt-3">
+                        <For each={msg.sources}>
+                          {(slug) => (
+                            <a
+                              href={`${BLOG_BASE}${slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="max-w-full rounded-full border border-[color:var(--site-control)] px-2.5 py-1 text-xs text-[color:var(--site-accent)] transition-colors hover:bg-[color:var(--site-wash)]"
+                            >
+                              📄 {slug}
+                            </a>
+                          )}
+                        </For>
+                      </div>
+                    </Show>
                   </Show>
-                </Show>
+                </div>
               </div>
-            </div>
-          )}
-        </For>
-      </div>
+            )}
+          </For>
+        </div>
+      </Show>
 
       {/* Input form */}
       <form
         onSubmit={submit}
-        class="sticky bottom-0 pt-3 pb-1 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md"
+        class="sticky bottom-0 bg-[color:var(--site-paper)] py-2"
       >
-        <div class="flex items-center gap-3 rounded-2xl border-2 border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 shadow-md focus-within:border-teal-500 dark:focus-within:border-teal-600 transition-all duration-200">
+        <div class="flex items-center gap-3 rounded-2xl border border-[color:var(--site-control)] bg-[color:var(--site-surface)] p-2 pl-4 transition-colors focus-within:border-[color:var(--site-accent)] focus-within:ring-1 focus-within:ring-[color:var(--site-accent)]">
           <input
             type="text"
             value={input()}
             onInput={(e) => setInput(e.currentTarget.value)}
-            placeholder='Ask anything about the blog…'
+            aria-label="Question about the blog"
+            placeholder="Ask a question…"
             disabled={loading()}
-            class="flex-1 bg-transparent text-sm text-zinc-800 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 outline-none disabled:opacity-50"
+            class="min-w-0 flex-1 bg-transparent text-base text-[color:var(--site-ink)] placeholder-[color:var(--site-muted)] outline-none disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={loading() || !input().trim()}
-            class="shrink-0 rounded-xl bg-teal-800 dark:bg-teal-700 text-white px-5 py-1.5 text-sm font-semibold tracking-wide hover:bg-teal-900 dark:hover:bg-teal-600 disabled:opacity-40 transition-colors duration-200"
+            class="min-h-11 shrink-0 rounded-xl bg-[color:var(--site-accent)] px-5 text-sm font-bold text-[color:var(--site-paper)] transition-opacity enabled:hover:opacity-85 disabled:opacity-40"
           >
             {loading() ? '…' : 'Ask'}
           </button>

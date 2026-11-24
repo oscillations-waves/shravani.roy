@@ -4,6 +4,7 @@ summary: "A practical introduction to retrieval-augmented generation (RAG), from
 date: "September 7 2026"
 draft: false
 tags:
+- technology
 - ai
 - rag
 - llms
@@ -25,9 +26,15 @@ RAG has two jobs:
 
 The flow looks like this:
 
-```text
-Question → find relevant passages → add them to the prompt → generate an answer
-```
+<figure class="article-diagram not-prose" aria-labelledby="rag-flow-caption">
+  <figcaption class="article-diagram__caption" id="rag-flow-caption">RAG request flow</figcaption>
+  <ol class="article-diagram__flow" role="list">
+    <li>Question</li>
+    <li>find relevant passages</li>
+    <li>add them to the prompt</li>
+    <li>generate an answer</li>
+  </ol>
+</figure>
 
 Suppose someone asks, “What does the blog say about Ruby variable scope?” A RAG system retrieves the section about local, global, instance, and class variables, then asks the language model to respond using that retrieved text.
 

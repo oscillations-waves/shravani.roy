@@ -1,10 +1,12 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content"
+import { type CollectionEntry, getCollection, render } from "astro:content"
+import ArticleContents from "@components/ArticleContents.astro"
 import PageLayout from "../../layouts/PageLayout.astro"
 import TopLayout from "../../layouts/TopLayout.astro"
 import BottomLayout from "../../layouts/BottomLayout.astro"
 import ArticleTopLayout from "../../layouts/ArticleTopLayout.astro"
 import ArticleBottomLayout from "../../layouts/ArticleBottomLayout.astro"
+import "@styles/blog-diagrams.css"
 
 // Create the static blog pages
 export async function getStaticPaths() {
@@ -19,19 +21,129 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<"blog">
 const post = Astro.props
 const { title, summary } = post.data
+const { Content, headings } = await render(post)
+const contents = headings.filter(({ depth }) => depth === 2 || depth === 3)
+const hasContents = contents.length > 0
 ---
 
 <PageLayout title={title} description={summary}>
-  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
-  <TopLayout>
-    <div class="animate">
-      <ArticleTopLayout entry={post}/>
+  <TopLayout size="lg">
+    <div class:list={["blog-heading", { "with-contents": hasContents }]}>
+      <ArticleTopLayout entry={post} />
     </div>
   </TopLayout>
-  <BottomLayout>
-    <div class="animate">
-      <ArticleBottomLayout entry={post} />
+  <BottomLayout size="lg">
+    <div class:list={["blog-reading", { "with-contents": hasContents }]}>
+      {hasContents && (
+        <aside class="blog-contents">
+          <ArticleContents headings={contents} />
+        </aside>
+      )}
+      <div class="blog-column">
+        <ArticleBottomLayout entry={post}>
+          <Content />
+        </ArticleBottomLayout>
+      </div>
     </div>
   </BottomLayout>
-  </div>
 </PageLayout>
+
+<style>
+  .blog-heading,
+  .blog-reading {
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .blog-heading :global(.page-summary) {
+    max-width: 56ch;
+    font-size: clamp(1.075rem, 2.5vw, 1.25rem);
+  }
+
+  .blog-contents {
+    margin-bottom: 2rem;
+  }
+
+  .blog-column {
+    min-width: 0;
+  }
+
+  .blog-column :global(article) {
+    max-width: 72ch;
+    font-size: clamp(1.0625rem, 1.7vw, 1.125rem);
+    line-height: 1.72;
+    overflow-wrap: anywhere;
+  }
+
+  .blog-column :global(article > p:first-child) {
+    font-size: 1.12em;
+    line-height: 1.65;
+  }
+
+  .blog-column :global(article h2),
+  .blog-column :global(article h3) {
+    scroll-margin-top: 5.5rem;
+    font-weight: 400;
+    line-height: 1.18;
+  }
+
+  .blog-column :global(article h2) {
+    margin-block: 1.8em 0.5em;
+    font-size: clamp(1.65rem, 3.6vw, 2.3rem);
+  }
+
+  .blog-column :global(article h3) {
+    font-size: clamp(1.25rem, 2.7vw, 1.6rem);
+  }
+
+  .blog-column :global(article h2:target),
+  .blog-column :global(article h3:target) {
+    color: var(--site-accent);
+  }
+
+  .blog-column :global(article pre) {
+    max-width: 100%;
+    border: 1px solid var(--site-rule);
+    border-radius: 0.625rem;
+    scrollbar-width: thin;
+  }
+
+  .blog-column :global(article img) {
+    max-width: 100%;
+    height: auto;
+    padding: 0;
+    border-radius: 0.625rem;
+  }
+
+  .blog-column :global(article figcaption) {
+    color: var(--site-muted);
+    font-size: 0.85rem;
+  }
+
+  @media (min-width: 64rem) {
+    .blog-heading.with-contents {
+      margin-inline-start: 0;
+    }
+
+    .blog-reading.with-contents {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      align-items: start;
+      gap: clamp(2rem, 4vw, 3.5rem);
+      max-width: none;
+    }
+
+    .blog-contents {
+      position: sticky;
+      top: 5.5rem;
+      grid-column: 2;
+      grid-row: 1;
+      margin-bottom: 0;
+    }
+
+    .with-contents .blog-column {
+      grid-column: 1;
+      grid-row: 1;
+    }
+  }
+</style>

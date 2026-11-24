@@ -1,5 +1,7 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
+import TopLayout from "../layouts/TopLayout.astro";
+import BottomLayout from "../layouts/BottomLayout.astro";
 import AskMyBlogChat from "@/components/AskMyBlogChat";
 
 const apiUrl =
@@ -7,11 +9,13 @@ const apiUrl =
 ---
 
 <PageLayout title="Ask My Blog" description="Ask anything about Shravani's blog — powered by AI.">
-  <div class="container max-w-2xl mx-auto px-4 py-12">
-    <h1 class="text-2xl font-semibold mb-2 text-neutral-800 dark:text-white">Ask my blog</h1>
-    <p class="text-neutral-600 dark:text-zinc-400 text-sm mb-8">
+  <TopLayout>
+    <h1 class="page-heading">Ask my blog</h1>
+    <p class="page-summary">
       Ask anything about my posts — topics, ideas, details. Answers come from the blog content only.
     </p>
+  </TopLayout>
+  <BottomLayout>
     <AskMyBlogChat apiUrl={apiUrl} client:load />
-  </div>
+  </BottomLayout>
 </PageLayout>

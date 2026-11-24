@@ -1,105 +1,178 @@
 ---
-import { SITE, SOCIALS } from "@/consts"
-import { withBase } from "@/lib/utils"
-import Container from "@components/Container.astro"
+import { SITE, SOCIALS } from "@/consts";
+import { withBase } from "@/lib/utils";
+
+const email = SOCIALS.find(({ ICON }) => ICON === "email");
+const profiles = SOCIALS.filter(({ ICON }) => ICON !== "email");
+const year = new Date().getFullYear();
 ---
 
-<footer class="relative bg-transparent dark:bg-black">
-  <div class="animate">
-    <section class="py-5">
-      <Container size="md">
-        <div class="flex items-center justify-center sm:justify-end">
-          <button id="back-to-top" aria-label="Back to top of page" class="group flex w-fit p-1.5 gap-1.5 text-sm items-center border rounded hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-colors duration-300 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="stroke-current group-hover:stroke-black group-hover:dark:stroke-white rotate-90">
-              <line x1="19" y1="12" x2="5" y2="12" class="scale-x-0 group-hover:scale-x-100 translate-x-3 group-hover:translate-x-0 transition-all duration-300 ease-in-out" />
-              <polyline points="12 19 5 12 12 5" class="translate-x-1 group-hover:translate-x-0 transition-all duration-300 ease-in-out" />
-            </svg>
-            <div class="w-full group-hover:text-neutral-800 group-hover:dark:text-white transition-colors duration-300 ease-in-out">
-              Back to top
-            </div>
-          </button>
-        </div>
-      </Container>
-    </section>
-  
-    <section class=" py-5 overflow-hidden whitespace-nowrap border-t border-black/10 dark:border-white/25">
-      <Container size="md">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="flex flex-col items-center sm:items-start">
-            <a href={withBase("/")} class="flex gap-1 w-fit font-semibold text-current hover:text-neutral-800 dark:hover:text-white transition-colors duration-300 ease-in-out">
-              <svg class="size-6 fill-current">
-                <use href={`${withBase("/brand.svg")}#brand`}/>
-              </svg>
-              {SITE.TITLE}
+<footer id="contact" class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-contact">
+      <div>
+        <h2>Drop me a note.</h2>
+        <p>
+          Have a project in mind, a book to recommend, or a photo to share?
+          I&rsquo;d love to hear from you.
+        </p>
+        <div class="contact-links">
+          {email && (
+            <a class="email-link" href={email.HREF}>
+              Email me <span aria-hidden="true">&rarr;</span>
             </a>
-          </div>
-          <div class="flex gap-2 justify-center sm:justify-end items-center">
-            <span class="relative flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            All systems normal
-          </div>
+          )}
+          <a href={withBase("/about")}>About me</a>
         </div>
-      </Container>
-    </section>
-  
-    <section class=" py-5 overflow-hidden whitespace-nowrap border-t border-black/10 dark:border-white/25">
-      <Container size="md">
-        <div class="h-full grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div class="order-2 sm:order-1 flex flex-col items-center justify-center sm:items-start">
-            <div class="legal">
-              <a href={withBase("/legal/terms")} class="text-current hover:text-neutral-800 dark:hover:text-white transition-colors duration-300 ease-in-out">
-                Terms
-              </a> |
-              <a href={withBase("/legal/privacy")} class="text-current hover:text-neutral-800 dark:hover:text-white transition-colors duration-300 ease-in-out">
-                Privacy
-              </a>
-            </div>
-            <div class="text-sm mt-2">
-              &copy; 2026 {SITE.AUTHOR} &middot; All rights reserved
-            </div>
-          </div>
-  
-          <div class="order-1 sm:order-2 flex justify-center sm:justify-end">
-            <div class="flex flex-wrap gap-1 items-center justify-center">
-              {
-                SOCIALS.map((SOCIAL) => (
-                  <a 
-                    href={SOCIAL.HREF} 
-                    target="_blank" 
-                    aria-label={`${SITE.TITLE} on ${SOCIAL.NAME}`} 
-                    class="group size-10 rounded-full p-2 items-center justify-center hover:bg-black/5 dark:hover:bg-white/20  blend"
-                  >
-                    <svg class="size-full fill-current group-hover:fill-black group-hover:dark:fill-white blend">
-                      <use href={`${withBase("/social.svg")}#${SOCIAL.ICON}`} />
-                    </svg>
-                  </a>
-                ))
-              }
-              </div>
-          </div>
-        </div>
-      </Container>
-    </section>
-  </div>
+      </div>
 
+      <nav class="profiles" aria-label="Social profiles">
+        <ul role="list">
+          {profiles.map(({ HREF, NAME }) => (
+            <li>
+              <a href={HREF}>{NAME} <span aria-hidden="true">&nearr;</span></a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <small>&copy; {year} {SITE.SHORT_NAME}</small>
+      <nav aria-label="Footer links">
+        <a href={withBase("/legal/terms")}>Terms</a>
+        <a href={withBase("/legal/privacy")}>Privacy</a>
+        <a class="back-to-top" href="#top">Back to top <span aria-hidden="true">&uarr;</span></a>
+      </nav>
+    </div>
+  </div>
 </footer>
 
-<script is:inline>
-  function goBackToTop(event) {
-    event.preventDefault()
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    })
+<style>
+  .site-footer {
+    --footer-paper: #faf7ee;
+    --footer-muted: #c4dcd4;
+    --footer-teal: #113d37;
+    --footer-mark: rgb(196 220 212 / 14%);
+
+    flex: none;
+    background-color: var(--footer-teal);
+    background-image: radial-gradient(
+      circle at 88% 2.75rem,
+      transparent 38px, var(--footer-mark) 39px 40px,
+      transparent 41px 53px, var(--footer-mark) 54px 55px,
+      transparent 56px 68px, var(--footer-mark) 69px 70px,
+      transparent 71px 83px, var(--footer-mark) 84px 85px,
+      transparent 86px 98px, var(--footer-mark) 99px 100px,
+      transparent 101px
+    );
+    color: var(--footer-paper);
   }
 
-  function initializeBackToTop() {
-    const backToTop = document.getElementById("back-to-top")
-    backToTop?.addEventListener("click", goBackToTop)
+  .footer-inner {
+    max-width: 64rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
   }
 
-  document.addEventListener("astro:after-swap", initializeBackToTop)
-  initializeBackToTop()
-</script>
+  .footer-contact {
+    display: grid;
+    gap: 1.75rem 3rem;
+    padding-block: clamp(2.5rem, 6vw, 4.25rem) clamp(1.75rem, 4vw, 2.75rem);
+  }
+
+  h2 {
+    font-family: var(--site-heading-font);
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    letter-spacing: -0.05em;
+    line-height: 1.04;
+  }
+
+  p {
+    max-width: 29rem;
+    margin-block: 0.8rem 1.35rem;
+    color: var(--footer-muted);
+    font-size: 1.0625rem;
+  }
+
+  .contact-links,
+  .footer-bottom,
+  .footer-bottom nav,
+  .profiles ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.25rem;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: 1.5rem;
+    text-decoration: underline;
+    text-decoration-color: rgb(196 220 212 / 55%);
+    text-underline-offset: 0.25em;
+  }
+
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--footer-paper);
+    outline-offset: 4px;
+  }
+
+  .email-link {
+    min-height: 2.75rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 0.25rem;
+    background: var(--footer-paper);
+    color: var(--footer-teal);
+    font-weight: 700;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .email-link:hover {
+    background: var(--footer-muted);
+  }
+
+  .profiles ul {
+    font-size: 0.95rem;
+  }
+
+  .profiles span,
+  .footer-bottom {
+    color: var(--footer-muted);
+  }
+
+  .footer-bottom {
+    justify-content: space-between;
+    padding-block: 0.95rem;
+    border-top: 1px solid rgb(196 220 212 / 30%);
+    font-size: 0.875rem;
+  }
+
+  small {
+    font-size: inherit;
+  }
+
+  .back-to-top {
+    color: var(--footer-paper);
+  }
+
+  @media (min-width: 48rem) {
+    .footer-contact {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+    }
+
+    .profiles ul {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      gap: 0.4rem 1.5rem;
+    }
+  }
+</style>

@@ -4,6 +4,7 @@ summary: "A gentle introduction to graph databases: nodes, relationships, proper
 date: "September 7 2026"
 draft: false
 tags:
+- technology
 - databases
 - graph-databases
 - beginners

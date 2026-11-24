@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { formatDate, withBase } from "@/lib/utils";
+import { formatDate, toValidDate, withBase } from "@/lib/utils";
 
 type Entry = CollectionEntry<"blog"> | CollectionEntry<"projects">;
 
@@ -11,28 +11,18 @@ type Props = {
 const { entry } = Astro.props as Props;
 
 const href = withBase(`/${entry.collection}/${entry.id}`);
-const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.id}.date`);
+const dateSource = `${entry.collection}/${entry.id}.date`;
+const publishedAt = toValidDate(entry.data.date, dateSource);
+const dateLabel = formatDate(publishedAt, dateSource);
 ---
 
-<a
-  href={href}
-  class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 blend"
->
-  <div class="w-full h-full group-hover:text-neutral-800 group-hover:dark:text-white blend">
-    <div class="flex flex-wrap gap-2">
-      <div class="text-sm uppercase opacity-60">
-        {dateLabel}
-      </div>
-    </div>
-
-    <div class="font-semibold mt-3 text-neutral-800 dark:text-white">
-      {entry.data.title}
-    </div>
+<a href={href} class="entry-card group">
+  <div class="entry-content">
+    <time datetime={publishedAt.toISOString()}>{dateLabel}</time>
+    <h2>{entry.data.title}</h2>
 
     {"summary" in entry.data && (
-      <div class="mt-1 text-sm opacity-75">
-        {entry.data.summary}
-      </div>
+      <p>{entry.data.summary}</p>
     )}
   </div>
 
@@ -42,10 +32,11 @@ const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.id}.d
     height="20"
     viewBox="0 0 24 24"
     fill="none"
+    stroke="currentColor"
     stroke-width="2.5"
     stroke-linecap="round"
     stroke-linejoin="round"
-    class="stroke-current group-hover:stroke-black group-hover:dark:stroke-white"
+    aria-hidden="true"
   >
     <line
       x1="5"
@@ -60,3 +51,60 @@ const dateLabel = formatDate(entry.data.date, `${entry.collection}/${entry.id}.d
     />
   </svg>
 </a>
+
+<style>
+  .entry-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    border: 1px solid var(--site-rule);
+    border-radius: 0.5rem;
+    padding: 1rem clamp(1rem, 3vw, 1.25rem);
+    color: var(--site-ink);
+    background: var(--site-surface);
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+
+  .entry-card:hover,
+  .entry-card:focus-visible {
+    border-color: var(--site-control);
+    background: var(--site-wash);
+  }
+
+  .entry-content {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  time,
+  svg {
+    color: var(--site-accent);
+  }
+
+  time {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin-top: 0.35rem;
+    font-family: var(--site-heading-font);
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  p {
+    margin-top: 0.4rem;
+    color: var(--site-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  svg {
+    flex: none;
+  }
+</style>

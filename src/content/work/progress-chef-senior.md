@@ -2,10 +2,10 @@
 company: "Progress Chef"
 role: "Senior Software Engineer"
 dateStart: "01/01/2024"
-dateEnd: "Present"
+dateEnd: "07/31/2026"
 ---
 
-Working on cloud-native infrastructure, AI-driven tooling, and platform reliability for Chef's enterprise products.
+Worked on cloud-native infrastructure, AI-driven tooling, and platform reliability for Chef's enterprise products while continuing to maintain the open-source **Chef Server** and **Chef Supermarket** projects.
 
 - Led development of **LogGPT**, an LLM-based log analysis system for automated error remediation, built with GPT4All, Mistral-7B, LangChain, and FAISS.
 - Designed multi-tenant **Chef-360 SaaS** and **Chef-360 Airgapped** architectures with managed services, feature toggles, and disaster recovery.

@@ -1,9 +1,25 @@
 ---
 import Container from "@components/Container.astro"
+
+type Props = { size?: "md" | "lg" }
+const { size = "md" } = Astro.props
 ---
 
-<div class="pt-36 pb-5">
-  <Container size="md">
-    <slot/>
+<div class="page-intro">
+  <Container size={size}>
+    <div class="page-intro-content">
+      <slot />
+    </div>
   </Container>
 </div>
+
+<style>
+  .page-intro {
+    padding-top: clamp(6.5rem, 12vw, 8.5rem);
+  }
+
+  .page-intro-content {
+    padding-bottom: clamp(1.5rem, 4vw, 2.25rem);
+    border-bottom: 1px solid var(--site-rule);
+  }
+</style>

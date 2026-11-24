@@ -1,105 +1,252 @@
 ---
+import Portrait from "@components/Portrait.astro";
+import AboutPhotoViewer from "@components/AboutPhotoViewer.astro";
 import PageLayout from "@/layouts/PageLayout.astro";
-import TopLayout from "@/layouts/TopLayout.astro";
-import BottomLayout from "@/layouts/BottomLayout.astro";
 import { SITE, SOCIALS } from "@/consts";
+import { aboutPhotos } from "@/data/portraits";
 import { withBase } from "@/lib/utils";
 ---
 
 <PageLayout
   title="About"
-  description="A little more about Shravani Roy — software engineer, reader, and quiet observer."
+  description="Meet Shravani Roy, a senior software engineer who writes about technology and loves photography, books, and film."
 >
-  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
-  <TopLayout>
-    <!-- Hero: photo placeholder on the left, name + role on the right. -->
-    <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
-      <div
-        class="size-36 shrink-0 overflow-hidden rounded-full border border-black/15 bg-white/40 backdrop-blur-sm md:size-44 dark:border-white/20 dark:bg-white/5"
-      >
-        <img
-          src={withBase("/me.jpg")}
-          alt={SITE.AUTHOR}
-          width="176"
-          height="176"
-          loading="eager"
-          class="aspect-square h-full w-full rounded-full object-cover"
-        />
+  <div class="about-page">
+    <div class="about-content">
+      <section class="about-intro" aria-labelledby="about-title">
+        <div>
+          <h1 id="about-title">Hi, I&rsquo;m <em>{SITE.AUTHOR}.</em></h1>
+          <p class="about-role">
+            Senior Software Engineer at <a
+              class="text-link"
+              href="https://www.n-able.com/"
+              target="_blank"
+              rel="noreferrer"
+            >N-able</a>
+          </p>
+          <p class="intro-copy">
+            I build backend services for identity and access management. I like
+            working through the details of who should have access to what and
+            following a request through the services that make that decision.
+          </p>
+        </div>
+        <Portrait photo={aboutPhotos[0]} viewerIndex={0} />
+      </section>
+
+      <div class="about-details">
+        <section aria-labelledby="work-title">
+          <h2 id="work-title">My work</h2>
+          <p>
+            At N-able, I build identity and access management services with Go,
+            gRPC, and Kubernetes, and use SpiceDB to model permissions. I enjoy
+            tackling challenging engineering problems, especially in distributed
+            systems. Before N-able, I built cloud platforms at Progress Chef and
+            worked on healthcare software at Cerner.
+          </p>
+          <p>
+            I earned a B.Tech in Computer Science from Netaji Subhash
+            Engineering College and completed machine learning coursework in 2025.
+          </p>
+          <div class="section-links">
+            <a class="text-link" href={withBase("/career")}>
+              View my career history <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </section>
+
+        <section aria-labelledby="interests-title">
+          <h2 id="interests-title">Away from my desk</h2>
+          <p>
+            I like taking photographs, getting lost in a good book, and
+            watching films that stay with me after the credits. My blog is
+            where I write about technology, cinema, and the little things I
+            notice along the way.
+          </p>
+          <div class="section-links">
+            <a class="text-link" href={withBase("/blog")}>
+              Read my blog <span aria-hidden="true">&rarr;</span>
+            </a>
+            <a class="text-link" href={withBase("/#gallery")}>
+              Browse my photos <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+          <div class="about-secondary-portrait">
+            <Portrait photo={aboutPhotos[1]} viewerIndex={1} loading="lazy" />
+          </div>
+        </section>
       </div>
 
-      <div class="text-center sm:text-left">
-        <h1 class="page-heading text-4xl md:text-5xl lg:text-6xl">
-          {SITE.AUTHOR}
-        </h1>
-        <p class="mt-2 text-base text-neutral-800/70 md:text-lg dark:text-white/70">
-          Senior Software Engineer at <a
-            href="https://www.progress.com/"
-            target="_blank"
-            rel="noreferrer"
-            class="underline decoration-black/30 decoration-[.5px] underline-offset-2 hover:decoration-black dark:decoration-white/50 dark:hover:decoration-white"
-          >Progress Chef</a>
-        </p>
-      </div>
-    </div>
-  </TopLayout>
-
-  <BottomLayout>
-    <article class="space-y-6">
-      <p>
-        I&rsquo;m a software engineer drawn to systems, stories, and
-        the quiet details that make both work and life meaningful. Professionally,
-        I spend most of my time building backend systems, untangling complex
-        problems, and exploring the architecture behind scalable technology.
-      </p>
-
-      <p>
-        Outside of code, I love getting lost in books, collecting films like
-        memories, and finding joy in the simple pleasures of existence
-        &mdash; rain against a window, late-night conversations, good coffee,
-        old songs, and moments of stillness in a world that moves too fast.
-      </p>
-
-      <p class="italic opacity-90">
-        This blog is a little corner of the internet where I write about
-        technology, cinema, ideas, observations, and the things that stay with
-        me long after the screen goes dark.
-      </p>
-
-      <div class="pt-2">
-        <a
-          href={withBase("/career")}
-          class="group inline-flex items-center gap-1 text-sm font-semibold text-neutral-800 underline decoration-neutral-800/30 decoration-[.5px] underline-offset-4 transition-colors hover:decoration-neutral-800 dark:text-white dark:decoration-white/50 dark:hover:decoration-white"
-        >
-          View Full Career History
-          <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5">&rsaquo;</span>
-        </a>
-      </div>
-
-      <div class="pt-4">
-        <h2 class="page-heading mb-4 text-lg md:text-xl">Find me online</h2>
-
-        <ul class="flex flex-wrap gap-3">
-          {
-            SOCIALS.map((social) => (
-              <li>
-                <a
-                  href={social.HREF}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.NAME}
-                  title={social.NAME}
-                  class="group inline-flex size-11 items-center justify-center rounded-full border border-black/15 bg-white/40 text-neutral-800/80 backdrop-blur-sm transition-colors hover:bg-black hover:text-white dark:border-white/20 dark:bg-white/5 dark:text-white/80 dark:hover:bg-white dark:hover:text-neutral-800"
-                >
-                  <svg class="size-5 fill-current" aria-hidden="true">
-                    <use href={`${withBase("/social.svg")}#${social.ICON}`} />
-                  </svg>
-                </a>
-              </li>
-            ))
-          }
+      <section class="about-socials" aria-labelledby="social-title">
+        <h2 id="social-title">Find me online</h2>
+        <ul class="social-list" role="list">
+          {SOCIALS.map((social) => (
+            <li>
+              <a
+                href={social.HREF}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.NAME}
+                title={social.NAME}
+              >
+                <svg aria-hidden="true">
+                  <use href={`${withBase("/social.svg")}#${social.ICON}`} />
+                </svg>
+              </a>
+            </li>
+          ))}
         </ul>
-      </div>
-    </article>
-  </BottomLayout>
+      </section>
+    </div>
   </div>
+  <AboutPhotoViewer photos={aboutPhotos} />
 </PageLayout>
+
+<style>
+  .about-page {
+    flex: 1;
+  }
+
+  .about-content {
+    width: 100%;
+    max-width: 64rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  .about-intro {
+    display: grid;
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 4.75rem);
+    padding-block: clamp(7.25rem, 13vw, 10rem) clamp(3rem, 7vw, 5.25rem);
+  }
+
+  h1,
+  h2 {
+    font-family: var(--site-heading-font);
+    font-weight: 400;
+  }
+
+  h1 {
+    font-size: clamp(2.85rem, 7.4vw, 5.5rem);
+    letter-spacing: -0.065em;
+    line-height: 1;
+  }
+
+  h1 em {
+    display: block;
+    color: var(--site-accent);
+  }
+
+  .about-role {
+    margin-top: 1.4rem;
+    font-size: clamp(1.0625rem, 2.6vw, 1.25rem);
+    font-weight: 700;
+  }
+
+  .intro-copy {
+    max-width: 47ch;
+    margin-top: 0.75rem;
+    color: var(--site-muted);
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+
+  .about-details {
+    display: grid;
+    gap: 2.5rem 4rem;
+    padding-block: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--site-rule);
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+  }
+
+  .about-details p {
+    max-width: 55ch;
+    margin-top: 0.85rem;
+    color: var(--site-muted);
+    line-height: 1.65;
+  }
+
+  .section-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+    margin-top: 1.15rem;
+  }
+
+  .about-secondary-portrait {
+    display: grid;
+    margin-top: 2.5rem;
+  }
+
+  .text-link {
+    color: var(--site-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-color: color-mix(in srgb, var(--site-accent) 60%, transparent);
+  }
+
+  .text-link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .about-content a:focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 4px;
+  }
+
+  .about-socials {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 1.75rem 2.5rem;
+    border-top: 1px solid var(--site-rule);
+  }
+
+  .about-socials h2 {
+    font-size: 1.55rem;
+  }
+
+  .social-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .social-list a {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--site-rule);
+    border-radius: 50%;
+    color: var(--site-accent);
+  }
+
+  .social-list a:hover {
+    border-color: var(--site-accent);
+    background: var(--site-wash);
+  }
+
+  .social-list svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+
+  @media (min-width: 42rem) {
+    .about-intro {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .about-details {
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    }
+  }
+</style>

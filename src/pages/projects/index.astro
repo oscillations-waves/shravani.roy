@@ -18,35 +18,22 @@ const projects = (await getCollection("projects"))
 ---
 
 <PageLayout title={PROJECTS.TITLE} description={PROJECTS.DESCRIPTION}>
-  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
   <TopLayout>
-    <div>
-      <h1 class="mt-2 text-3xl font-semibold text-neutral-800 dark:text-white">
-        {PROJECTS.TITLE}
-      </h1>
-
-      <div class="mt-1">
-        {PROJECTS.DESCRIPTION}
-      </div>
-    </div>
+    <h1 class="page-heading">{PROJECTS.TITLE}</h1>
+    <p class="page-summary">{PROJECTS.DESCRIPTION}</p>
   </TopLayout>
 
   <BottomLayout>
-    <section class="space-y-4">
-      {projects.length > 0 ? (
-        <ul class="space-y-4">
-          {projects.map((project) => (
-            <li>
-              <ArrowCard entry={project} />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p class="text-neutral-800/70 dark:text-white/70">
-          No projects found.
-        </p>
-      )}
-    </section>
+    {projects.length > 0 ? (
+      <ul class="space-y-4" role="list">
+        {projects.map((project) => (
+          <li>
+            <ArrowCard entry={project} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-[var(--site-muted)]">No projects found.</p>
+    )}
   </BottomLayout>
-  </div>
 </PageLayout>

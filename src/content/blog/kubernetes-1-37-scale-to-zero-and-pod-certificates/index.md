@@ -4,6 +4,7 @@ summary: "HPA scale-to-zero and native Pod Certificates make Kubernetes 1.37 an 
 date: "September 7 2026"
 draft: false
 tags:
+- technology
 - kubernetes
 - platform-engineering
 - cloud-native

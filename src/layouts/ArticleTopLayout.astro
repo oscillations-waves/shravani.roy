@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { readingTime, withBase } from "../lib/utils";
+import { formatDate, readingTime, toValidDate, withBase } from "../lib/utils";
 
 type Props = {
   entry: CollectionEntry<"projects"> | CollectionEntry<"blog">;
@@ -14,46 +14,16 @@ const { title, summary, date } = entry.data;
 const demoUrl = entry.collection === "projects" ? entry.data.demoUrl : undefined;
 const repoUrl = entry.collection === "projects" ? entry.data.repoUrl : undefined;
 
-const formatArticleDate = (value: unknown, label = "date"): string => {
-  if (value instanceof Date) {
-    if (!Number.isNaN(value.getTime())) {
-      return new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }).format(value);
-    }
-
-    throw new Error(`Invalid ${label}: received Invalid Date`);
-  }
-
-  if (typeof value === "string" || typeof value === "number") {
-    const parsedDate = new Date(value);
-
-    if (!Number.isNaN(parsedDate.getTime())) {
-      return new Intl.DateTimeFormat("en-US", {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }).format(parsedDate);
-    }
-
-    throw new Error(`Invalid ${label}: ${String(value)}`);
-  }
-
-  throw new Error(
-    `Invalid ${label}: expected Date/string/number, received ${typeof value}`
-  );
-};
-
-const dateLabel = formatArticleDate(date, `${collection}/${entry.id}.date`);
+const dateSource = `${collection}/${entry.id}.date`;
+const publishedAt = toValidDate(date, dateSource);
+const dateLabel = formatDate(publishedAt, dateSource);
 const readingTimeLabel = readingTime(body ?? "");
 ---
 
 <div>
   <a
     href={withBase(`/${collection}`)}
-    class="group flex w-fit items-center gap-1.5 rounded border border-black/15 p-1.5 text-sm transition-colors duration-300 ease-in-out hover:bg-black/5 dark:border-white/20 hover:dark:bg-white/10"
+    class="article-link group flex w-fit items-center gap-1.5 px-2.5 py-1.5 text-sm"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +35,6 @@ const readingTimeLabel = readingTime(body ?? "");
       stroke-width="2.5"
       stroke-linecap="round"
       stroke-linejoin="round"
-      class="group-hover:stroke-black group-hover:dark:stroke-white"
       aria-hidden="true"
     >
       <line
@@ -81,18 +50,16 @@ const readingTimeLabel = readingTime(body ?? "");
       />
     </svg>
 
-    <span class="group-hover:text-neutral-800 group-hover:dark:text-white">
-      Back to {collection}
-    </span>
+    Back to {collection}
   </a>
 
-  <div class="mt-12 flex flex-wrap gap-3 text-sm uppercase opacity-75">
+  <div class="article-meta flex flex-wrap gap-x-4 gap-y-2">
     <div class="flex items-center gap-2">
       <!-- Calendar icon -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
+        width="16"
+        height="16"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -107,15 +74,15 @@ const readingTimeLabel = readingTime(body ?? "");
         <path d="M3 10h18"></path>
       </svg>
 
-      <span>{dateLabel}</span>
+      <time datetime={publishedAt.toISOString()}>{dateLabel}</time>
     </div>
 
     <div class="flex items-center gap-2">
       <!-- Book icon -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
+        width="16"
+        height="16"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -133,13 +100,8 @@ const readingTimeLabel = readingTime(body ?? "");
     </div>
   </div>
 
-  <h1 class="mt-2 text-3xl font-semibold text-neutral-800 dark:text-white">
-    {title}
-  </h1>
-
-  <p class="mt-1 text-neutral-800/70 dark:text-white/70">
-    {summary}
-  </p>
+  <h1 class="page-heading">{title}</h1>
+  <p class="page-summary">{summary}</p>
 
   {(demoUrl || repoUrl) && (
     <div class="mt-4 flex flex-wrap gap-2">
@@ -148,7 +110,7 @@ const readingTimeLabel = readingTime(body ?? "");
           href={demoUrl}
           target="_blank"
           rel="noreferrer"
-          class="group flex items-center gap-2 truncate rounded border border-black/25 px-3 py-1.5 text-xs hover:bg-black/5 dark:border-white/25 hover:dark:bg-white/15 md:text-sm lg:text-base"
+          class="article-link flex items-center gap-2 px-3 py-1.5 text-sm"
         >
           <!-- Globe icon -->
           <svg
@@ -169,9 +131,7 @@ const readingTimeLabel = readingTime(body ?? "");
             <path d="M2 12h20"></path>
           </svg>
 
-          <span class="group-hover:text-neutral-800 group-hover:dark:text-white">
-            See Demo
-          </span>
+          See Demo
         </a>
       )}
 
@@ -180,7 +140,7 @@ const readingTimeLabel = readingTime(body ?? "");
           href={repoUrl}
           target="_blank"
           rel="noreferrer"
-          class="group flex items-center gap-2 truncate rounded border border-black/25 px-3 py-1.5 text-xs hover:bg-black/5 dark:border-white/25 hover:dark:bg-white/15 md:text-sm lg:text-base"
+          class="article-link flex items-center gap-2 px-3 py-1.5 text-sm"
         >
           <!-- Link icon -->
           <svg
@@ -199,11 +159,34 @@ const readingTimeLabel = readingTime(body ?? "");
             <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
           </svg>
 
-          <span class="group-hover:text-neutral-800 group-hover:dark:text-white">
-            See Repository
-          </span>
+          See Repository
         </a>
       )}
     </div>
   )}
 </div>
+
+<style>
+  .article-link {
+    border: 1px solid var(--site-control);
+    border-radius: 0.375rem;
+    color: var(--site-accent);
+    background: var(--site-surface);
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+
+  .article-link:hover,
+  .article-link:focus-visible {
+    border-color: var(--site-accent);
+    background: var(--site-wash);
+  }
+
+  .article-meta {
+    margin-block: 2rem 0.6rem;
+    color: var(--site-accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+</style>

@@ -4,6 +4,7 @@ summary: "A friendly tour of Ruby's variable identifiers, sigils, and the four k
 date: "May 15 2026"
 draft: false
 tags:
+- technology
 - ruby
 - fundamentals
 ---

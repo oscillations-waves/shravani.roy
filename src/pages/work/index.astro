@@ -60,41 +60,37 @@ const work = await Promise.all(
 ---
 
 <PageLayout title={WORK.TITLE} description={WORK.DESCRIPTION}>
-  <div class="min-h-screen bg-[#FDFAF2] text-neutral-700 dark:bg-black dark:text-white">
   <TopLayout>
-    <div class="page-heading">
-      {WORK.TITLE}
-    </div>
+    <h1 class="page-heading">{WORK.TITLE}</h1>
   </TopLayout>
 
   <BottomLayout>
     {work.length > 0 ? (
-      <ul>
+      <ul class="divide-y divide-[color:var(--site-rule)]">
         {work.map(({ data, Content }) => (
-          <li class="mt-4 border-b border-black/10 py-8 first-of-type:mt-0 first-of-type:pt-0 last-of-type:border-none dark:border-white/25">
-            <div class="mb-4 text-sm uppercase text-neutral-800/60 dark:text-white/60">
-              {formatWorkDate(data.dateStart)} - {formatWorkDate(data.dateEnd)}
-            </div>
+          <li class="py-7 first:pt-0 sm:py-9">
+            <p class="mb-2 text-xs font-bold uppercase tracking-widest text-[color:var(--site-accent)]">
+              {formatWorkDate(data.dateStart)} – {formatWorkDate(data.dateEnd)}
+            </p>
 
-            <div class="font-semibold text-neutral-800 dark:text-white">
+            <h2 class="font-[family-name:var(--site-heading-font)] text-2xl text-[color:var(--site-ink)] sm:text-3xl">
               {data.company}
-            </div>
+            </h2>
 
-            <div class="text-sm font-semibold text-neutral-800/70 dark:text-white/70">
+            <p class="mt-1 text-sm font-bold text-[color:var(--site-muted)]">
               {data.role}
-            </div>
+            </p>
 
-            <article class="prose mt-4 dark:prose-invert">
+            <article class="mt-4 pb-0">
               <Content />
             </article>
           </li>
         ))}
       </ul>
     ) : (
-      <p class="text-neutral-800/70 dark:text-white/70">
+      <p class="text-[color:var(--site-muted)]">
         No work entries found.
       </p>
     )}
   </BottomLayout>
-  </div>
 </PageLayout>

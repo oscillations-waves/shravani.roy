@@ -1,9 +1,18 @@
 ---
 import Container from "@components/Container.astro"
+
+type Props = { size?: "md" | "lg" }
+const { size = "md" } = Astro.props
 ---
 
-<div class="flex-1 py-5">
-  <Container size="md">
+<div class="page-body flex-1">
+  <Container size={size}>
     <slot/>
   </Container>
 </div>
+
+<style>
+  .page-body {
+    padding-block: 1.5rem clamp(3rem, 7vw, 5rem);
+  }
+</style>

@@ -1,107 +1,128 @@
 ---
 import { SITE, LINKS } from "../consts"
-import { cn, withBase } from "../lib/utils"
-const { pathname } = Astro.url
-const subpath = pathname.match(/[^/]+/g)
+import { withBase } from "../lib/utils"
 import Container from "@components/Container.astro"
 
-// On cream-backgrounded pages (about, blog) use dark header text so it's legible.
-const onLightPage =
-  pathname === withBase("/about") ||
-  pathname.startsWith(withBase("/about/")) ||
-  pathname === withBase("/blog") ||
-  pathname.startsWith(withBase("/blog/")) ||
-  pathname === withBase("/work") ||
-  pathname.startsWith(withBase("/work/")) ||
-  pathname === withBase("/career") ||
-  pathname.startsWith(withBase("/career/")) ||
-  pathname === withBase("/projects") ||
-  pathname.startsWith(withBase("/projects/")) ||
-  pathname === withBase("/ask")
-const textColor = onLightPage ? "text-neutral-800 dark:text-white" : "text-white"
-const strokeColor = onLightPage ? "stroke-neutral-800 dark:stroke-white" : "stroke-white"
-const borderColor = onLightPage ? "border-neutral-800/30 dark:border-white/30" : "border-white/30"
-const hoverBg = onLightPage ? "hover:bg-neutral-800/10 dark:hover:bg-white/10" : "hover:bg-white/10"
-const activePillBg = onLightPage ? "bg-neutral-800/15 dark:bg-white/20" : "bg-white/20"
+const pathname = Astro.url.pathname.replace(/\/$/, "")
 
-const iconButton = cn(
-  "size-9 rounded-full p-2 items-center justify-center",
-  "bg-transparent",
-  hoverBg,
-  textColor,
-  strokeColor,
-  "border",
-  borderColor,
-  "transition-colors duration-300 ease-in-out",
-)
-const isActive = (href: string) =>
-  pathname === withBase(href) || "/" + subpath?.[0] === href
+function getCurrent(href: string): "page" | "location" | undefined {
+  if (href.includes("#")) return
+  const destination = withBase(href).replace(/\/$/, "")
+  if (pathname === destination) return "page"
+  if (href !== "/" && pathname.startsWith(destination + "/")) return "location"
+}
+
 ---
 
-<header id="header" class="fixed top-0 w-full h-16 z-50 ">
-  <Container size="md">
-    <div class="relative h-full w-full">
-      <div class="absolute left-0 top-1/2 -translate-y-1/2 font-semibold">
-        <a href={withBase("/")} class={cn("hover:opacity-80 transition-opacity duration-300 ease-in-out", textColor)}>
-          {SITE.TITLE}
-        </a>
-      </div>
-
-    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <nav class="hidden md:flex items-center justify-center text-sm gap-1">
-        {
-          LINKS.map((LINK) => (
-            <a
-              href={withBase(LINK.HREF)}
-              class={cn(
-                "h-8 rounded-full px-3 flex items-center justify-center transition-colors duration-300 ease-in-out",
-                textColor,
-                isActive(LINK.HREF)
-                  ? onLightPage
-                    ? "bg-neutral-800/20 dark:bg-white/30"
-                    : "bg-white/30"
-                  : onLightPage
-                    ? "hover:bg-neutral-800/10 dark:hover:bg-white/15"
-                    : "hover:bg-white/15"
-              )}
-            >
-              {LINK.TEXT}
-            </a>
-          ))
-        }
-      </nav>
-    </div>
-
-    <div class="buttons absolute right-0 top-1/2 -translate-y-1/2 flex gap-1">
-      <a href={withBase("/search")} aria-label={`Search blog posts and projects on ${SITE.TITLE}`} class={cn("hidden md:flex", iconButton, isActive("/search") && cn("pointer-events-none", activePillBg))}>
-        <svg class="size-full">
-          <use href={`${withBase("/ui.svg")}#search`}></use>
-        </svg>
+<header id="header" class="fixed top-0 z-50 h-16 w-full">
+  <Container size="lg">
+    <div class="flex h-full items-center justify-between">
+      <a href={withBase("/")} class="site-wordmark inline-flex min-h-11 items-center">
+        {SITE.SHORT_NAME}
       </a>
 
-      <button id="header-theme-button" aria-label={`Toggle light and dark theme`} class={cn("hidden md:flex", iconButton)}>
-        <svg class="size-full block dark:hidden">
-          <use href={`${withBase("/ui.svg")}#sun`}></use>
-        </svg>
-        <svg class="size-full hidden dark:block">
-          <use href={`${withBase("/ui.svg")}#moon`}></use>
-        </svg>
-      </button>
+      <nav aria-label="Primary" class="ml-auto hidden items-center gap-4 text-sm md:flex lg:gap-6">
+        {LINKS.map((LINK) => (
+          <a
+            href={withBase(LINK.HREF)}
+            aria-current={getCurrent(LINK.HREF)}
+            class="site-nav-link inline-flex min-h-11 items-center whitespace-nowrap"
+          >
+            {LINK.TEXT}
+          </a>
+        ))}
+      </nav>
 
-      <button id="header-drawer-button" aria-label={`Toggle drawer open and closed`} class={cn("flex md:hidden", iconButton)}>
-        <svg id="drawer-open" class="size-full">
-          <use href={`${withBase("/ui.svg")}#menu`}></use>
-        </svg>
-        <svg id="drawer-close" class="size-full">
-          <use href={`${withBase("/ui.svg")}#x`}></use>
-        </svg>
-      </button>
+      <div class="site-nav-actions -mr-2 flex items-center gap-px md:ml-5 md:border-l md:pl-3">
+        <a href={withBase("/search")} aria-label="Search blog posts and projects" aria-current={getCurrent("/search")} class="site-nav-icon">
+          <svg aria-hidden="true" class="size-full">
+            <use href={`${withBase("/ui.svg")}#search`}></use>
+          </svg>
+        </a>
+
+        <button id="header-theme-button" type="button" aria-label="Toggle light and dark theme" class="site-nav-icon">
+          <svg aria-hidden="true" class="block size-full dark:hidden">
+            <use href={`${withBase("/ui.svg")}#sun`}></use>
+          </svg>
+          <svg aria-hidden="true" class="hidden size-full dark:block">
+            <use href={`${withBase("/ui.svg")}#moon`}></use>
+          </svg>
+        </button>
+
+        <button id="header-drawer-button" type="button" aria-label="Menu" aria-expanded="false" aria-controls="drawer" class="site-nav-icon md:hidden">
+          <svg aria-hidden="true" id="drawer-open" class="size-full">
+            <use href={`${withBase("/ui.svg")}#menu`}></use>
+          </svg>
+          <svg aria-hidden="true" id="drawer-close" class="size-full">
+            <use href={`${withBase("/ui.svg")}#x`}></use>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
   </Container>
 </header>
 
-<style>
+<style is:global>
+  #header,
+  #drawer {
+    background: var(--site-paper);
+    color: var(--site-ink);
+  }
+
+  #header {
+    border-bottom: 1px solid var(--site-rule);
+  }
+
+  .site-wordmark {
+    color: var(--site-accent);
+    font-family: var(--site-heading-font);
+    font-size: 1.875rem;
+    letter-spacing: -0.055em;
+    line-height: 1;
+  }
+
+  .site-nav-link,
+  .site-nav-icon {
+    color: var(--site-muted);
+  }
+
+  .site-wordmark:hover,
+  .site-nav-link:hover,
+  .site-nav-link[aria-current] {
+    color: var(--site-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
+  }
+
+  .site-nav-link[aria-current] {
+    font-weight: 700;
+    text-decoration-thickness: 2px;
+  }
+
+  .site-nav-actions {
+    border-color: var(--site-rule);
+  }
+
+  .site-nav-icon {
+    @apply size-11 rounded-full p-3;
+    stroke: currentColor;
+  }
+
+  .site-nav-icon:is(:hover, [aria-current], [aria-expanded="true"]) {
+    background: var(--site-wash);
+    color: var(--site-accent);
+  }
+
+  .site-nav-icon[aria-current] {
+    box-shadow: inset 0 0 0 1px var(--site-accent);
+  }
+
+  :is(.site-wordmark, .site-nav-link, .site-nav-icon):focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 2px;
+  }
+
   #header-drawer-button > #drawer-open {
     @apply block;
   }
@@ -110,28 +131,39 @@ const isActive = (href: string) =>
     @apply hidden;
   }
 
-  #header-drawer-button.open > #drawer-open {
+  #header-drawer-button[aria-expanded="true"] > #drawer-open {
     @apply hidden;
   }
 
-  #header-drawer-button.open > #drawer-close {
+  #header-drawer-button[aria-expanded="true"] > #drawer-close {
     @apply block;
   }
 </style>
 
-<script is:inline>
-  function toggleDrawer() {
+<script>
+  function setDrawerOpen(open: boolean) {
     const drawer = document.getElementById("drawer")
     const drawerButton = document.getElementById("header-drawer-button")
-    drawer?.classList.toggle("open")
-    drawerButton?.classList.toggle("open")
+    drawer?.toggleAttribute("inert", !open)
+    drawerButton?.setAttribute("aria-expanded", String(open))
   }
 
-  function initializeDrawerButton() {
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) return
+    const drawerButton = event.target.closest("#header-drawer-button")
+    if (drawerButton) {
+      setDrawerOpen(drawerButton.getAttribute("aria-expanded") !== "true")
+    } else if (event.target.closest("#header a, #drawer a")) {
+      setDrawerOpen(false)
+    }
+  })
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return
     const drawerButton = document.getElementById("header-drawer-button")
-    drawerButton?.addEventListener("click", toggleDrawer)
-  }
-
-  document.addEventListener("astro:after-swap", initializeDrawerButton)
-  initializeDrawerButton()
+    if (drawerButton?.getAttribute("aria-expanded") === "true") {
+      setDrawerOpen(false)
+      drawerButton.focus()
+    }
+  })
 </script>
