@@ -20,6 +20,7 @@ export const GET: APIRoute = async ({ site, url }) => {
       title: item.data.title,
       description: item.data.summary,
       pubDate: item.data.date,
+      categories: item.data.tags,
       link: `${item.collection}/${item.id}/`,
     })),
   })
