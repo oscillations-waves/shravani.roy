@@ -4,6 +4,16 @@ dist/
 # generated types
 .astro/
 
+# Private checkout and prepared site inputs
+/.private-content/
+/.private-content-prepare/
+/src/content/blog/
+/src/assets/photography/
+/src/data/photography.ts
+/public/blog/
+/public/cafe-portrait.webp
+/public/home-portrait.webp
+
 # dependencies
 node_modules/
 

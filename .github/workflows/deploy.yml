@@ -3,37 +3,97 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '17,47 * * * *'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      publish: ${{ steps.content.outputs.publish }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check private content access
+        env:
+          CONTENT_DEPLOY_KEY: ${{ secrets.CONTENT_DEPLOY_KEY }}
+        run: |
+          if [[ -z "$CONTENT_DEPLOY_KEY" ]]; then
+            echo "::error::Set CONTENT_DEPLOY_KEY to the read-only deploy key for the private content repository."
+            exit 1
+          fi
+      - name: Check out private content
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/shravani.roy-content
+          ref: main
+          path: .private-content
+          ssh-key: ${{ secrets.CONTENT_DEPLOY_KEY }}
+          persist-credentials: false
+      - name: Check for changes
+        id: content
+        run: |
+          content_commit=$(git -C .private-content rev-parse HEAD)
+          version=$(printf '%s\n' "$GITHUB_SHA" "$content_commit" | sha256sum | cut -d ' ' -f 1)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          if [[ "$GITHUB_EVENT_NAME" == schedule ]]; then
+            published=$(curl --fail --silent --show-error --max-time 10 \
+              -H 'Cache-Control: no-cache' \
+              "https://oscillations-waves.github.io/shravani.roy/content-version.txt?version=$version" || true)
+            if [[ "$published" == "$version" ]]; then
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          fi
+          echo "publish=true" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v4
+        if: steps.content.outputs.publish == 'true'
         with:
           node-version: 22
           cache: npm
       - run: npm ci --legacy-peer-deps
-      - run: npm run build
+        if: steps.content.outputs.publish == 'true'
+      - name: Prepare site content
+        if: steps.content.outputs.publish == 'true'
+        run: node scripts/prepare-content.mjs
+      - name: Build published site
+        if: steps.content.outputs.publish == 'true'
         env:
           BASE_PATH: /shravani.roy
+          CONTENT_VERSION: ${{ steps.content.outputs.version }}
+        run: |
+          npm run build
+          if [[ -n "$(find dist -type f \( -iname '*.md' -o -iname '*.mdx' -o -iname '*.map' \) -print -quit)" ]]; then
+            echo "::error::The deployment contains raw source files."
+            exit 1
+          fi
+          printf '%s\n' "$CONTENT_VERSION" > dist/content-version.txt
       - uses: actions/configure-pages@v5
+        if: steps.content.outputs.publish == 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.content.outputs.publish == 'true'
         with:
           path: ./dist
 
   deploy:
     needs: build
+    if: needs.build.outputs.publish == 'true'
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     environment:
       name: github-pages

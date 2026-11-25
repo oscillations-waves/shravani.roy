@@ -1,13 +1,11 @@
 import rss from "@astrojs/rss"
+import type { APIRoute } from "astro"
 import { getCollection } from "astro:content"
 import { SITE } from "@/consts"
+import { withBase } from "@/lib/utils"
 
-type Context = {
-  site: string
-}
-
-export async function GET(context: Context) {
-	const posts = await getCollection("blog")
+export const GET: APIRoute = async ({ site, url }) => {
+  const posts = await getCollection("blog", ({ data }) => !data.draft)
   const projects = await getCollection("projects")
 
   const items = [...posts, ...projects]
@@ -17,14 +15,12 @@ export async function GET(context: Context) {
   return rss({
     title: SITE.TITLE,
     description: SITE.DESCRIPTION,
-    site: context.site,
+    site: new URL(withBase("/"), site ?? url.origin),
     items: items.map((item) => ({
       title: item.data.title,
       description: item.data.summary,
       pubDate: item.data.date,
-      link: item.collection === "blog"
-        ? `/blog/${item.id}/`
-        : `/projects/${item.id}/`,
+      link: `${item.collection}/${item.id}/`,
     })),
   })
 }

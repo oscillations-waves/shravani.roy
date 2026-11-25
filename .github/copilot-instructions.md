@@ -30,7 +30,7 @@ Key files:
 
 ## Content collections & frontmatter schemas
 
-### Blog posts — `src/content/blog/<slug>/index.md`
+### Blog posts — `published/src/content/blog/<slug>/index.md` in the private content repository
 ```yaml
 ---
 title: "Post Title"
@@ -126,10 +126,11 @@ When helping with this blog, keep these improvement directions in mind:
 ## Patterns to follow
 
 ### Adding a new blog post
-1. Create `src/content/blog/<slug>/index.md`
+1. Write the post and keep any draft images under `drafts/` in the private content checkout
 2. Follow the frontmatter schema above
-3. Place images in the same directory; reference as `/blog/<slug>/image.jpg`
-4. Set `draft: true` while writing; flip to `false` to publish
+3. To publish, set `draft: false` and move the post to `published/src/content/blog/<slug>/index.md` with any article-relative images
+4. Run `node scripts/prepare-content.mjs` from the public site checkout to preview the prepared copy
+5. Commit and push blog and photo changes in the private content repository
 
 ### Adding a new project
 1. Create `src/content/projects/<slug>/index.md`

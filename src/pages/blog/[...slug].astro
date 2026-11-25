@@ -10,7 +10,7 @@ import "@styles/blog-diagrams.css"
 
 // Create the static blog pages
 export async function getStaticPaths() {
-	const posts = await getCollection("blog")
+	const posts = await getCollection("blog", ({ data }) => !data.draft)
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: post,
